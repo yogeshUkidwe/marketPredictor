@@ -1,0 +1,6 @@
+{
+  "name": "AstroQuant - Share Market & Astro Predictor",
+  "description": "Advanced share market predictor combining technical indicators, global market dependencies, and financial astrology planetary cycles for 50+ watchlist stocks and global search.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

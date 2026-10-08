@@ -1,0 +1,485 @@
+export type Language = 'en' | 'hi' | 'gu' | 'mr' | 'es';
+
+export interface TranslationDictionary {
+  appName: string;
+  appSubtitle: string;
+  askAiMarketExpert: string;
+  aiMarketExpert: string;
+  chatOnlineStatus: string;
+  chatSubtitle: string;
+  chatPlaceholder: string;
+  send: string;
+  searchPlaceholder: string;
+  watchlist: string;
+  allSectors: string;
+  sectorTech: string;
+  sectorBanking: string;
+  sectorEnergy: string;
+  sectorAuto: string;
+  sectorMetals: string;
+  sectorPharma: string;
+  sectorFmcg: string;
+  sectorInfra: string;
+  sectorTelecom: string;
+  sectorDefense: string;
+  beginnerMode: string;
+  mediumMode: string;
+  expertMode: string;
+  beginnerDesc: string;
+  mediumDesc: string;
+  expertDesc: string;
+  liveFeedActive: string;
+  streamingSync: string;
+  marketStatusOpen: string;
+  marketStatusClosed: string;
+  targetsLockedNotice: string;
+  toggleMarketStatus: string;
+  googleSignIn: string;
+  signedInAs: string;
+  signOut: string;
+  exportBackup: string;
+  postMarketAudit: string;
+  postMarketDesc: string;
+  currentPrice: string;
+  predictedTarget: string;
+  expectedProfit: string;
+  actualClose: string;
+  targetMatched: string;
+  targetMissed: string;
+  targetDeviation: string;
+  matchedBadge: string;
+  missedBadge: string;
+  whyNotMatched: string;
+  promoterBuying: string;
+  globalCues: string;
+  previousDay: string;
+  fundamentalsReason: string;
+  astroReason: string;
+  modelConfidence: string;
+  overallBias: string;
+  swingTarget: string;
+  stopLoss: string;
+  rulingPlanet: string;
+  astroRadar: string;
+  customAlerts: string;
+  syncWithoutReload: string;
+  intradayTarget: string;
+  oneMonthTarget: string;
+  riskReward: string;
+  predShort: string;
+  targetAccuracy: string;
+  filterWatchlist: string;
+  sortBy: string;
+  sortAstro: string;
+  sortGainers: string;
+  sortLosers: string;
+  sortPredicted: string;
+  nextTick: string;
+  refreshNow: string;
+  postCloseAudit: string;
+  export: string;
+  radar: string;
+}
+
+export const TRANSLATIONS: Record<Language, TranslationDictionary> = {
+  en: {
+    appName: 'AstroQuant India',
+    appSubtitle: 'Indian Share Market Predictor • Technical, Macro & Astro Cycles',
+    askAiMarketExpert: 'Ask AI Market Expert',
+    aiMarketExpert: 'AI Market Expert',
+    chatOnlineStatus: 'Market & Macro Quantitative Specialist Online',
+    chatSubtitle: 'Equities, Technicals, Fundamentals & Macro Cycle Strategist',
+    chatPlaceholder: 'Ask anything about stocks, targets, promoter buying, or planetary cycles...',
+    send: 'Send',
+    searchPlaceholder: 'Search any Indian stock (e.g. RELIANCE, HDFCBANK, TATAMOTORS, ITC)...',
+    watchlist: 'NIFTY 50 Watchlist',
+    allSectors: 'All Sectors',
+    sectorTech: 'Technology (IT)',
+    sectorBanking: 'Banking & Fin',
+    sectorEnergy: 'Energy & Oil',
+    sectorAuto: 'Automobile',
+    sectorMetals: 'Metals & Mining',
+    sectorPharma: 'Pharma & Health',
+    sectorFmcg: 'FMCG & Consumer',
+    sectorInfra: 'Infrastructure',
+    sectorTelecom: 'Telecom',
+    sectorDefense: 'Aerospace & Defense',
+    beginnerMode: 'Beginner',
+    mediumMode: 'Medium',
+    expertMode: 'Expert',
+    beginnerDesc: 'Simple signals, plain-English advice, and easy profit targets.',
+    mediumDesc: 'Balanced technicals, support/resistance, and planetary transits.',
+    expertDesc: 'Full Gann cycles, order flow, Ashtakavarga, and institutional Greeks.',
+    liveFeedActive: 'Live Market Feed Active',
+    streamingSync: 'Real-Time Sync (No Reload Needed)',
+    marketStatusOpen: 'Market Open (Prices Syncing • Targets Locked)',
+    marketStatusClosed: 'Market Closed (Post-Market Target Match Audit Active)',
+    targetsLockedNotice: 'Pre-market predicted amount is locked and does not change during market hours',
+    toggleMarketStatus: 'Toggle Market Open/Closed',
+    googleSignIn: 'Sign in with Google',
+    signedInAs: 'Signed in as',
+    signOut: 'Sign Out',
+    exportBackup: 'Export / Backup (CSV/JSON)',
+    postMarketAudit: 'Post-Market Target Match Audit',
+    postMarketDesc: 'Compare predicted target vs actual closing price after 3:30 PM',
+    currentPrice: 'Current Price',
+    predictedTarget: 'Predicted Target Amount',
+    expectedProfit: 'Expected Profit Potential',
+    actualClose: 'Actual Closing Price',
+    targetMatched: 'Target Matched (Success)',
+    targetMissed: 'Target Missed',
+    targetDeviation: 'Deviation Observed',
+    matchedBadge: '🎯 Target Matched',
+    missedBadge: '❌ Target Missed',
+    whyNotMatched: 'Why Target Deviated / Matched (Root Cause Analysis)',
+    promoterBuying: 'Promoter & FII/DII Institutional Buying',
+    globalCues: 'Global Dependent Stocks & Crude Oil Impact',
+    previousDay: 'Previous Day Analysis & Support Pivots',
+    fundamentalsReason: 'Company Fundamentals & P/E Valuation',
+    astroReason: 'Astrological Planetary Transit Window Alignment',
+    modelConfidence: 'Confidence Score',
+    overallBias: 'Market Bias',
+    swingTarget: '1-Week Swing Target',
+    stopLoss: 'Stop-Loss Limit',
+    rulingPlanet: 'Ruling Planet',
+    astroRadar: 'Astro Radar',
+    customAlerts: 'Price Alerts',
+    syncWithoutReload: 'Live Streaming',
+    intradayTarget: '1-Day Intraday Target',
+    oneMonthTarget: '1-Month Positional Target',
+    riskReward: 'Risk : Reward',
+    predShort: 'Pred',
+    targetAccuracy: 'Accuracy',
+    filterWatchlist: 'Filter watchlist (e.g. RELIANCE, Tech, Jupiter)...',
+    sortBy: 'Sort',
+    sortAstro: 'Astro Score',
+    sortGainers: 'Gainers',
+    sortLosers: 'Losers',
+    sortPredicted: 'Target Upside',
+    nextTick: 'Next tick',
+    refreshNow: 'Refresh',
+    postCloseAudit: 'Post-Close Audit',
+    export: 'Export',
+    radar: 'Radar'
+  },
+  hi: {
+    appName: 'AstroQuant India',
+    appSubtitle: 'भारतीय शेयर बाजार प्रेडिक्टर • टेक्निकल, फंडामेंटल और एस्ट्रो विश्लेषण',
+    askAiMarketExpert: 'एआई मार्केट एक्सपर्ट से पूछें',
+    aiMarketExpert: 'एआई मार्केट एक्सपर्ट',
+    chatOnlineStatus: 'मार्केट और मैक्रो क्वांटिटेटिव एक्सपर्ट ऑनलाइन',
+    chatSubtitle: 'शेयर भाव, टेक्निकल, फंडामेंटल और ग्रह चक्र रणनीतिकार',
+    chatPlaceholder: 'शेयर, टारगेट, प्रमोटर खरीदारी या ग्रह चक्र के बारे में कुछ भी पूछें...',
+    send: 'भेजें',
+    searchPlaceholder: 'शेयर खोजें (जैसे RELIANCE, HDFCBANK, TATAMOTORS, ITC)...',
+    watchlist: 'निफ्टी 50 वॉचलिस्ट (Nifty 50)',
+    allSectors: 'सभी सेक्टर (All Sectors)',
+    sectorTech: 'टेक्नोलॉजी (IT)',
+    sectorBanking: 'बैंकिंग और फाइनेंस (Banking)',
+    sectorEnergy: 'ऊर्जा एवं तेल (Energy & Oil)',
+    sectorAuto: 'ऑटोमोबाइल (Auto)',
+    sectorMetals: 'मेटल्स एवं माइनिंग (Metals)',
+    sectorPharma: 'फार्मा और हेल्थ (Pharma)',
+    sectorFmcg: 'एफएमसीजी (FMCG)',
+    sectorInfra: 'इंफ्रास्ट्रक्चर (Infra)',
+    sectorTelecom: 'टेलीकॉम (Telecom)',
+    sectorDefense: 'डिफेंस (Defense)',
+    beginnerMode: 'शुरुआती (Beginner)',
+    mediumMode: 'मध्यम (Medium)',
+    expertMode: 'एक्सपर्ट (Expert)',
+    beginnerDesc: 'सरल सलाह, सीधा टारगेट और आसान भाषा में समझें कब खरीदें।',
+    mediumDesc: 'बैलेंस्ड टेक्निकल चार्ट, सपोर्ट/रेजिस्टेंस और ग्रह गोचर।',
+    expertDesc: 'फुल गैन चक्र, इंस्टीट्यूशनल वॉल्यूम और सर्वातोभद्र चक्र।',
+    liveFeedActive: 'लाइव मार्केट फीड सक्रिय है (Live)',
+    streamingSync: 'बिना रीलोड लाइव डेटा सिंक',
+    marketStatusOpen: 'मार्केट खुला है (लाइव भाव सिंक • प्रेडिक्शन लॉक)',
+    marketStatusClosed: 'मार्केट बंद है (क्लोजिंग टारगेट ऑडिट सक्रिय)',
+    targetsLockedNotice: 'मार्केट शुरू होने के बाद प्रेडिक्टेड टारगेट लॉक रहता है और बदलता नहीं है',
+    toggleMarketStatus: 'मार्केट स्टेटस बदलें (Open/Closed)',
+    googleSignIn: 'Google से साइन इन करें',
+    signedInAs: 'लॉग इन:',
+    signOut: 'साइन आउट (Sign Out)',
+    exportBackup: 'बैकअप डाउनलोड (CSV/JSON)',
+    postMarketAudit: 'मार्केट क्लोज टारगेट ऑडिट (Post-Market Audit)',
+    postMarketDesc: 'मार्केट बंद होने के बाद प्रेडिक्टेड टारगेट और क्लोजिंग भाव का मिलान',
+    currentPrice: 'करंट प्राइस (Current Price)',
+    predictedTarget: 'प्रेडिक्टेड टारगेट भाव (Predicted Target)',
+    expectedProfit: 'अनुमानित मुनाफा (Profit Potential)',
+    actualClose: 'वास्तविक क्लोजिंग भाव (Actual Close)',
+    targetMatched: 'टारगेट मैच हुआ (सफल)',
+    targetMissed: 'टारगेट मिस हुआ',
+    targetDeviation: 'भाव में अंतर (Deviation)',
+    matchedBadge: '🎯 टारगेट मैच हुआ',
+    missedBadge: '❌ टारगेट मिस हुआ',
+    whyNotMatched: 'टारगेट मैच/अंतर का कारण विश्लेषण (Root Cause)',
+    promoterBuying: 'प्रमोटर और FII/DII संस्थागत खरीदारी',
+    globalCues: 'ग्लोबल मार्केट शेयर एवं क्रूड ऑयल असर',
+    previousDay: 'पिछले दिन का टेक्निकल सपोर्ट एवं रेजिस्टेंस',
+    fundamentalsReason: 'कंपनी फंडामेंटल्स एवं P/E वैल्यूएशन',
+    astroReason: 'ग्रह गोचर एवं नक्षत्र समय चक्र प्रभाव',
+    modelConfidence: 'कॉन्फिडेंस स्कोअर (Confidence)',
+    overallBias: 'मार्केट का मूड (Bias)',
+    swingTarget: '1-हफ्ते का स्विंग टारगेट (Swing Target)',
+    stopLoss: 'स्टॉप-लॉस (Stop-Loss)',
+    rulingPlanet: 'स्वामी ग्रह (Ruling Planet)',
+    astroRadar: 'एस्ट्रो रडार (Astro Radar)',
+    customAlerts: 'प्राइस अलर्ट्स (Alerts)',
+    syncWithoutReload: 'लाइव स्ट्रीमिंग',
+    intradayTarget: '1-दिन इंट्राडे टारगेट',
+    oneMonthTarget: '1-महीना पोजीशनल टारगेट',
+    riskReward: 'रिस्क : रिवॉर्ड (Risk:Reward)',
+    predShort: 'प्रेडिक्टेड',
+    targetAccuracy: 'सटीकता',
+    filterWatchlist: 'शेयर खोजें (जैसे RELIANCE, Banking)...',
+    sortBy: 'क्रमबद्ध',
+    sortAstro: 'एस्ट्रो स्कोर',
+    sortGainers: 'बढ़त वाले',
+    sortLosers: 'गिरावट वाले',
+    sortPredicted: 'अधिकतम टारगेट',
+    nextTick: 'अगला टिक',
+    refreshNow: 'रिफ्रेश',
+    postCloseAudit: 'क्लोजिंग ऑडिट',
+    export: 'एक्सपोर्ट',
+    radar: 'रडार'
+  },
+  gu: {
+    appName: 'AstroQuant India',
+    appSubtitle: 'ભારતીય શેર બજાર પ્રિડિક્ટર • ટેકનિકલ, ફંડામેન્ટલ અને એસ્ટ્રો વિશ્લેષણ',
+    askAiMarketExpert: 'AI માર્કેટ એક્સપર્ટને પૂછો',
+    aiMarketExpert: 'AI માર્કેટ એક્સપર્ટ',
+    chatOnlineStatus: 'માર્કેટ અને મેક્રો ક્વોન્ટિટેટિવ એક્સપર્ટ ઓનલાઇન',
+    chatSubtitle: 'શેર ભાવ, ટેકનિકલ, ફંડામેન્ટલ અને ગ્રહ ચક્ર વ્યૂહરચનાકાર',
+    chatPlaceholder: 'શેર, ટાર્ગેટ, પ્રમોટર ખરીદી અથવા ગ્રહ ચક્ર વિશે પૂછો...',
+    send: 'મોકલો',
+    searchPlaceholder: 'શેર શોધો (દા.ત. RELIANCE, HDFCBANK, TATAMOTORS, ITC)...',
+    watchlist: 'નિફ્ટી 50 વૉચલિસ્ટ (Nifty 50)',
+    allSectors: 'બધા સેક્ટર્સ (All Sectors)',
+    sectorTech: 'ટેક્નોલોજી (IT)',
+    sectorBanking: 'બેન્કિંગ અને ફાઇનાન્સ (Banking)',
+    sectorEnergy: 'ઊર્જા અને તેલ (Energy & Oil)',
+    sectorAuto: 'ઓટોમોબાઇલ (Auto)',
+    sectorMetals: 'મેટલ્સ અને માઇનિંગ (Metals)',
+    sectorPharma: 'ફાર્મા અને હેલ્થ (Pharma)',
+    sectorFmcg: 'એફએમસીજી (FMCG)',
+    sectorInfra: 'ઇન્ફ્રાસ્ટ્રક્ચર (Infra)',
+    sectorTelecom: 'ટેલિકોમ (Telecom)',
+    sectorDefense: 'ડિફેન્સ (Defense)',
+    beginnerMode: 'બિગિનર (Beginner)',
+    mediumMode: 'મીડિયમ (Medium)',
+    expertMode: 'એક્સપર્ટ (Expert)',
+    beginnerDesc: 'સરળ સલાહ, સીધો ટાર્ગેટ અને સરળ ભાષામાં માર્ગદર્શન.',
+    mediumDesc: 'ટેકનિકલ ચાર્ટ, સપોર્ટ/રેઝિસ્ટન્સ અને ગ્રહ ગોચર વિગત.',
+    expertDesc: 'સંપૂર્ણ ગાન ચક્ર, ઇન્સ્ટિટ્યૂશનલ વોલ્યુમ અને એસ્ટ્રો ક્વોન્ટ.',
+    liveFeedActive: 'લાઇવ માર્કેટ ફીડ સક્રિય છે (Live)',
+    streamingSync: 'રીલોડ વિના લાઇવ ડેટા સિંક',
+    marketStatusOpen: 'માર્કેટ ચાલુ છે (લાઇવ ભાવ સિંક • ટાર્ગેટ લૉક)',
+    marketStatusClosed: 'માર્કેટ બંધ છે (ક્લોઝિંગ ટાર્ગેટ ઓડિટ સક્રિય)',
+    targetsLockedNotice: 'માર્કેટ શરૂ થયા પછી પ્રિડિક્ટેડ ટાર્ગેટ લૉક રહે છે અને બદલાતો નથી',
+    toggleMarketStatus: 'માર્કેટ સ્ટેટસ બદલો (Open/Closed)',
+    googleSignIn: 'Google થી સાઇન ઇન કરો',
+    signedInAs: 'લૉગ ઇન:',
+    signOut: 'સાઇન આઉટ (Sign Out)',
+    exportBackup: 'ડેટા ડાઉનલોડ (CSV/JSON)',
+    postMarketAudit: 'માર્કેટ બંધ થયા પછી ટાર્ગેટ ચેક (Post-Market Audit)',
+    postMarketDesc: 'માર્કેટ બંધ થયા પછી પ્રિડિક્ટેડ ટાર્ગેટ અને ક્લોઝિંગ ભાવની સરખામણી',
+    currentPrice: 'કરંટ પ્રાઇસ (Current Price)',
+    predictedTarget: 'પ્રિડિક્ટેડ ટાર્ગેટ ભાવ (Predicted Target)',
+    expectedProfit: 'અપેક્ષિત નફો (Profit Potential)',
+    actualClose: 'વાસ્તવિક ક્લોઝિંગ ભાવ (Actual Close)',
+    targetMatched: 'ટાર્ગેટ મેચ થયો (સફળ)',
+    targetMissed: 'ટાર્ગેટ ચૂકી ગયો',
+    targetDeviation: 'ભાવમાં તફાવત (Deviation)',
+    matchedBadge: '🎯 ટાર્ગેટ મેચ થયો',
+    missedBadge: '❌ ટાર્ગેટ ચૂકી ગયો',
+    whyNotMatched: 'ટાર્ગેટ મેચ/તફાવતનું કારણ વિશ્લેષણ (Root Cause)',
+    promoterBuying: 'પ્રમોટર અને FII/DII સંસ્થાકીય ખરીદી',
+    globalCues: 'ગ્લોબલ માર્કેટ શેર અને ક્રૂડ ઓઇલ અસર',
+    previousDay: 'પાછલા દિવસનો ટેકનિકલ સપોર્ટ અને રેઝિસ્ટન્સ',
+    fundamentalsReason: 'કંપની ફંડામેન્ટલ્સ અને P/E રેશિયો',
+    astroReason: 'ગ્રહ ગોચર અને નક્ષત્ર સમય પ્રભાવ વિલંબ',
+    modelConfidence: 'કોન્ફિડન્સ સ્કોર (Confidence)',
+    overallBias: 'માર્કેટ મૂડ (Bias)',
+    swingTarget: '1-અઠવાડિયાનો સ્વિંગ ટાર્ગેટ',
+    stopLoss: 'સ્ટોપ-લોસ (Stop-Loss)',
+    rulingPlanet: 'સ્વામી ગ્રહ (Ruling Planet)',
+    astroRadar: 'એસ્ટ્રો રડાર (Astro Radar)',
+    customAlerts: 'પ્રાઇસ એલર્ટ્સ',
+    syncWithoutReload: 'લાઇવ સ્ટ્રીમિંગ',
+    intradayTarget: '1-દિવસ ઇન્ટ્રાડે ટાર્ગેટ',
+    oneMonthTarget: '1-મહિનો પોઝિશનલ ટાર્ગેટ',
+    riskReward: 'રિસ્ક : રિવોર્ડ (Risk:Reward)',
+    predShort: 'પ્રિડિક્ટ',
+    targetAccuracy: 'ચોકસાઈ',
+    filterWatchlist: 'શેર ફિલ્ટર કરો (દા.ત. RELIANCE, Banking)...',
+    sortBy: 'ક્રમ',
+    sortAstro: 'એસ્ટ્રો સ્કોર',
+    sortGainers: 'વધારાવાળા',
+    sortLosers: 'ઘટાડાવાળા',
+    sortPredicted: 'મહત્તમ ટાર્ગેટ',
+    nextTick: 'આગલો ટિક',
+    refreshNow: 'રીફ્રેશ',
+    postCloseAudit: 'ક્લોઝિંગ ઓડિટ',
+    export: 'એક્સપોર્ટ',
+    radar: 'રડાર'
+  },
+  mr: {
+    appName: 'AstroQuant India',
+    appSubtitle: 'भारतीय शेअर बाजार प्रेडिक्टर • टेक्निकल, फंडामेंटल आणि ॲस्ट्रो विश्लेषण',
+    askAiMarketExpert: 'एआय मार्केट एक्सपर्टला विचारा',
+    aiMarketExpert: 'एआय मार्केट एक्सपर्ट',
+    chatOnlineStatus: 'मार्केट आणि मॅक्रो क्वांटिटेटिव्ह तज्ज्ञ ऑनलाइन',
+    chatSubtitle: 'शेअर भाव, टेक्निकल, फंडामेंटल आणि ग्रह सायकल विश्लेषक',
+    chatPlaceholder: 'शेअर, टार्गेट, प्रमोटर खरेदी किंवा ग्रह सायकल बद्दल विचारा...',
+    send: 'पाठवा',
+    searchPlaceholder: 'शेअर शोधा (उदा. RELIANCE, HDFCBANK, TATAMOTORS, ITC)...',
+    watchlist: 'निफ्टी 50 वॉचलिस्ट (Nifty 50)',
+    allSectors: 'सर्व सेक्टर्स (All Sectors)',
+    sectorTech: 'टेक्नॉलॉजी (IT)',
+    sectorBanking: 'बँकिंग आणि फायनान्स (Banking)',
+    sectorEnergy: 'ऊर्जा आणि तेल (Energy & Oil)',
+    sectorAuto: 'ऑटोमोबाईल (Auto)',
+    sectorMetals: 'मेटल्स आणि मायनिंग (Metals)',
+    sectorPharma: 'फार्मा आणि हेल्थ (Pharma)',
+    sectorFmcg: 'एफएमसीजी (FMCG)',
+    sectorInfra: 'इन्फ्रास्ट्रक्चर (Infra)',
+    sectorTelecom: 'टेलिकॉम (Telecom)',
+    sectorDefense: 'डिफेन्स (Defense)',
+    beginnerMode: 'नवशिक्या (Beginner)',
+    mediumMode: 'मध्यम (Medium)',
+    expertMode: 'तज्ज्ञ (Expert)',
+    beginnerDesc: 'सोपी भाषा, थेट टार्गेट आणि कधी खरेदी करावी याचे स्पष्ट मार्गदर्शन.',
+    mediumDesc: 'संतुलित चार्ट, सपोर्ट/रेझिस्टन्स आणि ग्रह गोचर आढावा.',
+    expertDesc: 'संपूर्ण गॅन सायकल, संस्थात्मक ऑर्डर फ्लो आणि ज्योतिष चक्र.',
+    liveFeedActive: 'थेट मार्केट फीड सुरू आहे (Live)',
+    streamingSync: 'रिलोड न करता थेट डेटा सिंक',
+    marketStatusOpen: 'मार्केट सुरू आहे (थेट भाव सिंक • टार्गेट लॉक)',
+    marketStatusClosed: 'मार्केट बंद आहे (क्लोजिंग टार्गेट ऑडिट सक्रिय)',
+    targetsLockedNotice: 'मार्केट सुरू झाल्यावर प्रेडिक्टेड टार्गेट लॉक राहतो आणि बदलत नाही',
+    toggleMarketStatus: 'मार्केट स्थिती बदला (Open/Closed)',
+    googleSignIn: 'Google ने साइन इन करा',
+    signedInAs: 'लॉग इन वापरकर्ता:',
+    signOut: 'साइन आउट (Sign Out)',
+    exportBackup: 'डेटा बॅकअप (CSV/JSON)',
+    postMarketAudit: 'मार्केट क्लोज टार्गेट ऑडिट (Post-Market Audit)',
+    postMarketDesc: 'मार्केट बंद झाल्यावर प्रेडिक्टेड टार्गेट आणि क्लोजिंग भावाची तुलना',
+    currentPrice: 'चालू भाव (Current Price)',
+    predictedTarget: 'प्रेडिक्टेड टार्गेट भाव (Predicted Target)',
+    expectedProfit: 'अपेक्षित नफा (Profit Potential)',
+    actualClose: 'प्रत्यक्ष क्लोजिंग भाव (Actual Close)',
+    targetMatched: 'टार्गेट तंतोतंत जुळले (यशस्वी)',
+    targetMissed: 'टार्गेट चुकले',
+    targetDeviation: 'भावात तफावत (Deviation)',
+    matchedBadge: '🎯 टार्गेट जुळले',
+    missedBadge: '❌ टार्गेट चुकले',
+    whyNotMatched: 'टार्गेट जुळणे/तफावत कारण विश्लेषण (Root Cause)',
+    promoterBuying: 'प्रमोटर व FII/DII संस्थात्मक खरेदी',
+    globalCues: 'ग्लोबल मार्केट आणि कच्च्या तेलाचा प्रभाव',
+    previousDay: 'मागील सत्राचा टेक्निकल सपोर्ट आणि रेझिस्टन्स',
+    fundamentalsReason: 'कंपनीचे मूलभूत फंडामेंटल्स आणि P/E',
+    astroReason: 'ग्रह गोचर आणि नक्षत्र प्रभाव वेळ',
+    modelConfidence: 'कॉन्फिडन्स स्कोअर (Confidence)',
+    overallBias: 'बाजार कल (Market Bias)',
+    swingTarget: '1-आठवड्याचे स्विंग टार्गेट',
+    stopLoss: 'स्टॉप-लॉस (Stop-Loss)',
+    rulingPlanet: 'स्वामी ग्रह (Ruling Planet)',
+    astroRadar: 'ॲस्ट्रो रडार (Astro Radar)',
+    customAlerts: 'प्राइस अलर्ट्स',
+    syncWithoutReload: 'थेट प्रवाह अपडेट्स',
+    intradayTarget: '1-दिवस इंट्राडे टार्गेट',
+    oneMonthTarget: '1-महिना पोझिशनल टार्गेट',
+    riskReward: 'रिस्क : रिवॉर्ड (Risk:Reward)',
+    predShort: 'प्रेडिक्ट',
+    targetAccuracy: 'अचूकता',
+    filterWatchlist: 'शेअर शोधा (उदा. RELIANCE, Banking)...',
+    sortBy: 'क्रमवारी',
+    sortAstro: 'ॲस्ट्रो स्कोअर',
+    sortGainers: 'वाढलेले',
+    sortLosers: 'घसरलेले',
+    sortPredicted: 'कमाल टार्गेट',
+    nextTick: 'पुढील टिक',
+    refreshNow: 'रिफ्रेश',
+    postCloseAudit: 'क्लोजिंग ऑडिट',
+    export: 'एक्सपोर्ट',
+    radar: 'रडार'
+  },
+  es: {
+    appName: 'AstroQuant India',
+    appSubtitle: 'Predictor del Mercado Indio • Análisis Técnico, Fundamental y Astrológico',
+    askAiMarketExpert: 'Consultar Experto IA de Mercado',
+    aiMarketExpert: 'Experto IA de Mercado',
+    chatOnlineStatus: 'Especialista Cuantitativo y Macro Online',
+    chatSubtitle: 'Estratega de Acciones, Fundamentales y Ciclos Planetarios',
+    chatPlaceholder: 'Pregunte sobre acciones, objetivos, compras de promotores o ciclos...',
+    send: 'Enviar',
+    searchPlaceholder: 'Buscar acciones indias (ej. RELIANCE, HDFCBANK, TATAMOTORS, ITC)...',
+    watchlist: 'Lista NIFTY 50 (Nifty 50)',
+    allSectors: 'Todos los Sectores',
+    sectorTech: 'Tecnología (IT)',
+    sectorBanking: 'Banca y Finanzas',
+    sectorEnergy: 'Energía y Petróleo',
+    sectorAuto: 'Automóviles',
+    sectorMetals: 'Metales y Minería',
+    sectorPharma: 'Farmacéutica y Salud',
+    sectorFmcg: 'Consumo Masivo (FMCG)',
+    sectorInfra: 'Infraestructura',
+    sectorTelecom: 'Telecomunicaciones',
+    sectorDefense: 'Defensa y Aeroespacial',
+    beginnerMode: 'Principiante',
+    mediumMode: 'Intermedio',
+    expertMode: 'Experto',
+    beginnerDesc: 'Señales simples, objetivos claros y explicaciones en lenguaje sencillo.',
+    mediumDesc: 'Gráficos técnicos equilibrados, soporte/resistencia y tránsitos.',
+    expertDesc: 'Ciclos completos de Gann, flujo institucional y Astro-Quant avanzado.',
+    liveFeedActive: 'Transmisión en Vivo Activa (Live)',
+    streamingSync: 'Sincronización en Vivo (Sin Recargar)',
+    marketStatusOpen: 'Mercado Abierto (Precios en Vivo • Objetivos Bloqueados)',
+    marketStatusClosed: 'Mercado Cerrado (Auditoría de Cierre Activa)',
+    targetsLockedNotice: 'El objetivo predicho pre-mercado está bloqueado y no cambia durante la sesión',
+    toggleMarketStatus: 'Cambiar Estado del Mercado (Open/Closed)',
+    googleSignIn: 'Iniciar sesión con Google',
+    signedInAs: 'Sesión iniciada como:',
+    signOut: 'Cerrar Sesión',
+    exportBackup: 'Exportar Respaldo (CSV/JSON)',
+    postMarketAudit: 'Auditoría Post-Cierre (Post-Market Audit)',
+    postMarketDesc: 'Compare el objetivo predicho con el cierre real después de las 3:30 PM',
+    currentPrice: 'Precio Actual',
+    predictedTarget: 'Objetivo Predicho (Target Amount)',
+    expectedProfit: 'Ganancia Potencial Estimada',
+    actualClose: 'Precio de Cierre Real',
+    targetMatched: 'Objetivo Acertado (Éxito)',
+    targetMissed: 'Objetivo No Acertado',
+    targetDeviation: 'Desviación Observada',
+    matchedBadge: '🎯 Objetivo Acertado',
+    missedBadge: '❌ Objetivo No Acertado',
+    whyNotMatched: 'Por qué difirió / acertó (Análisis Causa Raíz)',
+    promoterBuying: 'Compras de Promotores e Institucionales FII/DII',
+    globalCues: 'Mercados Globales y Petróleo Crudo',
+    previousDay: 'Soporte Técnico de la Sesión Anterior',
+    fundamentalsReason: 'Fundamentales de la Empresa y P/E',
+    astroReason: 'Alineación de Tránsitos Planetarios y Nakshatras',
+    modelConfidence: 'Puntuación de Confianza',
+    overallBias: 'Sesgo del Mercado',
+    swingTarget: 'Objetivo Swing a 1 Semana',
+    stopLoss: 'Límite Stop-Loss',
+    rulingPlanet: 'Planeta Regente',
+    astroRadar: 'Radar Astrológico',
+    customAlerts: 'Alertas de Precio',
+    syncWithoutReload: 'Transmisión en Vivo',
+    intradayTarget: 'Objetivo Intradía a 1 Día',
+    oneMonthTarget: 'Objetivo Posicional a 1 Mes',
+    riskReward: 'Riesgo : Recompensa',
+    predShort: 'Pred',
+    targetAccuracy: 'Precisión',
+    filterWatchlist: 'Filtrar acciones (ej. RELIANCE, Banca)...',
+    sortBy: 'Ordenar',
+    sortAstro: 'Puntaje Astro',
+    sortGainers: 'Más Ganadores',
+    sortLosers: 'Más Perdedores',
+    sortPredicted: 'Mayor Ganancia',
+    nextTick: 'Próximo tick',
+    refreshNow: 'Actualizar',
+    postCloseAudit: 'Auditoría Cierre',
+    export: 'Exportar',
+    radar: 'Radar'
+  }
+};
