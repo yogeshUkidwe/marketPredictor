@@ -8,6 +8,9 @@ interface StockSearchModalProps {
   stocks: Stock[];
   onSelectStock: (stock: Stock) => void;
   onAddCustomStock: (newStock: Stock) => void;
+  activeWatchlistName?: string;
+  activeWatchlistStockIds?: string[];
+  onToggleStockInWatchlist?: (stockId: string) => void;
 }
 
 const INDIAN_MARKET_CHIPS = [
@@ -40,7 +43,10 @@ export const StockSearchModal: React.FC<StockSearchModalProps> = ({
   onClose,
   stocks,
   onSelectStock,
-  onAddCustomStock
+  onAddCustomStock,
+  activeWatchlistName,
+  activeWatchlistStockIds,
+  onToggleStockInWatchlist
 }) => {
   const [query, setQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState<'ALL' | 'NSE' | 'GLOBAL'>('ALL');
@@ -381,8 +387,10 @@ export const StockSearchModal: React.FC<StockSearchModalProps> = ({
               const isPositive = stock.changePercent >= 0;
               const pred = stock.predictedAmount || stock.prediction.target1D;
 
+              const isInWatchlist = activeWatchlistStockIds?.includes(stock.id);
+
               return (
-                <button
+                <div
                   key={stock.id}
                   onClick={() => {
                     onSelectStock(stock);
@@ -407,24 +415,47 @@ export const StockSearchModal: React.FC<StockSearchModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="text-right space-y-0.5">
-                    <div className="font-mono font-black text-sm text-slate-100">
-                      {stock.currency}{stock.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  <div className="flex items-center gap-3">
+                    <div className="text-right space-y-0.5">
+                      <div className="font-mono font-black text-sm text-slate-100">
+                        {stock.currency}{stock.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </div>
+                      <div className="flex items-center justify-end gap-2 text-xs font-mono">
+                        <span
+                          className={`font-semibold ${
+                            isPositive ? 'text-emerald-400' : 'text-rose-400'
+                          }`}
+                        >
+                          {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                        </span>
+                        <span className="text-cyan-300 font-bold bg-cyan-950/50 px-1.5 py-0.2 rounded border border-cyan-800/40 text-[10px]">
+                          Target: {stock.currency}{pred.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-end gap-2 text-xs font-mono">
-                      <span
-                        className={`font-semibold ${
-                          isPositive ? 'text-emerald-400' : 'text-rose-400'
+
+                    {onToggleStockInWatchlist && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleStockInWatchlist(stock.id);
+                        }}
+                        className={`p-2 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-semibold ${
+                          isInWatchlist
+                            ? 'bg-amber-500/20 border-amber-500/50 text-amber-300 hover:bg-amber-500/30'
+                            : 'bg-slate-800/80 border-slate-700/80 text-slate-400 hover:text-cyan-300 hover:border-cyan-500/50 hover:bg-slate-800'
                         }`}
+                        title={isInWatchlist ? `Remove from ${activeWatchlistName || 'Watchlist'}` : `Add to ${activeWatchlistName || 'Watchlist'}`}
                       >
-                        {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
-                      </span>
-                      <span className="text-cyan-300 font-bold bg-cyan-950/50 px-1.5 py-0.2 rounded border border-cyan-800/40 text-[10px]">
-                        Target: {stock.currency}{pred.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                      </span>
-                    </div>
+                        <Star className={`w-3.5 h-3.5 ${isInWatchlist ? 'fill-amber-400 text-amber-400' : ''}`} />
+                        <span className="hidden sm:inline text-[11px]">
+                          {isInWatchlist ? 'Saved' : '+ Watchlist'}
+                        </span>
+                      </button>
+                    )}
                   </div>
-                </button>
+                </div>
               );
             })
           )}

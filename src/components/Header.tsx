@@ -1,9 +1,10 @@
 import React from 'react';
-import { Compass, Orbit, Search, Star, BellRing, Download, Target, Globe, User, Bot } from 'lucide-react';
+import { Compass, Orbit, Search, Star, BellRing, Download, Target, Globe, User, Bot, Code2 } from 'lucide-react';
 import { NotificationCenter } from './NotificationCenter';
 import { AppNotification } from '../types';
 import { Language, TranslationDictionary } from '../utils/translations';
 import { UserProfile } from './GoogleAuthModal';
+import { DeviceModeSwitcher } from '../framework';
 
 interface HeaderProps {
   onOpenRadar: () => void;
@@ -14,6 +15,7 @@ interface HeaderProps {
   onOpenPostMarketAudit: () => void;
   onOpenGoogleAuth: () => void;
   onOpenChat: () => void;
+  onOpenFlutterCode?: () => void;
   user: UserProfile;
   currentLanguage: Language;
   onSelectLanguage: (lang: Language) => void;
@@ -37,6 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenPostMarketAudit,
   onOpenGoogleAuth,
   onOpenChat,
+  onOpenFlutterCode,
   user,
   currentLanguage,
   onSelectLanguage,
@@ -128,6 +131,21 @@ export const Header: React.FC<HeaderProps> = ({
             <Download className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
             <span className="hidden xl:inline">{t.export}</span>
           </button>
+
+          {/* Flutter Framework & Code Hub Button */}
+          {onOpenFlutterCode && (
+            <button
+              onClick={onOpenFlutterCode}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/50 border border-cyan-800/60 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-sm"
+              title="Inspect Flutter Project Architecture & Dart Code"
+            >
+              <Code2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span className="hidden sm:inline">Flutter Hub</span>
+            </button>
+          )}
+
+          {/* Framework Device Mode Switcher (App / Tab / Web / Auto) */}
+          <DeviceModeSwitcher />
 
           {/* Language Selector Dropdown */}
           <div className="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs">

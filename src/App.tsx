@@ -23,6 +23,13 @@ import { AnalysisModeSelector, AnalysisLevel } from './components/AnalysisModeSe
 import { AstroQuantChatModal } from './components/AstroQuantChatModal';
 import { Language, TRANSLATIONS } from './utils/translations';
 import { TrendingUp, TrendingDown, Star, BellRing, Sparkles, Shield, Compass, BookOpen, Layers, Bot, Target, Lock } from 'lucide-react';
+import {
+  ResponsiveProvider,
+  useResponsiveMode,
+  AppShell,
+  BottomNavBar,
+  FlutterCodeHubModal
+} from './framework';
 
 const INITIAL_WATCHLISTS = (stocks: Stock[]): WatchlistGroup[] => [
   {
@@ -56,7 +63,7 @@ const INITIAL_WATCHLISTS = (stocks: Stock[]): WatchlistGroup[] => [
   }
 ];
 
-export default function App() {
+function AppContent() {
   const [stocks, setStocks] = useState<Stock[]>(() => buildTop50Watchlist());
   const [selectedStock, setSelectedStock] = useState<Stock>(() => {
     const list = buildTop50Watchlist();
@@ -192,6 +199,7 @@ export default function App() {
   const [isPostMarketAuditOpen, setIsPostMarketAuditOpen] = useState(false);
   const [isGoogleAuthModalOpen, setIsGoogleAuthModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isFlutterCodeOpen, setIsFlutterCodeOpen] = useState(false);
 
   const t = TRANSLATIONS[currentLanguage] || TRANSLATIONS.en;
 
@@ -549,42 +557,39 @@ export default function App() {
   const isPositive = selectedStock.changePercent >= 0;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
-      {/* Global Macro Ticker Bar */}
-      <GlobalMacroBar />
-
-      {/* Main Header with Language, Google Auth, Alerts, Watchlists, Export, and Post-Market Audit */}
-      <Header
-        onOpenRadar={() => setIsRadarOpen(true)}
-        onOpenSearch={() => setIsSearchOpen(true)}
-        onOpenAlerts={() => setIsAlertsModalOpen(true)}
-        onOpenWatchlists={() => setIsWatchlistModalOpen(true)}
-        onOpenExport={() => setIsExportModalOpen(true)}
-        onOpenPostMarketAudit={() => setIsPostMarketAuditOpen(true)}
-        onOpenGoogleAuth={() => setIsGoogleAuthModalOpen(true)}
-        onOpenChat={() => setIsChatOpen(true)}
-        user={userProfile}
-        currentLanguage={currentLanguage}
-        onSelectLanguage={setCurrentLanguage}
-        watchlistCount={stocks.length}
-        activeWatchlistName={activeWatchlist.name}
-        marketFilter={marketFilter}
-        onFilterChange={setMarketFilter}
-        notifications={notifications}
-        onMarkAllNotificationsRead={() =>
-          setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
-        }
-        onClearNotifications={() => setNotifications([])}
-        onSelectStockSymbol={(symbol) => {
-          const s = stocks.find((st) => st.symbol === symbol);
-          if (s) setSelectedStock(s);
-        }}
-        t={t}
-      />
-
-      {/* Main Workspace */}
-      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Watchlist Sidebar (Left) */}
+    <AppShell
+      macroBar={<GlobalMacroBar />}
+      header={
+        <Header
+          onOpenRadar={() => setIsRadarOpen(true)}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onOpenAlerts={() => setIsAlertsModalOpen(true)}
+          onOpenWatchlists={() => setIsWatchlistModalOpen(true)}
+          onOpenExport={() => setIsExportModalOpen(true)}
+          onOpenPostMarketAudit={() => setIsPostMarketAuditOpen(true)}
+          onOpenGoogleAuth={() => setIsGoogleAuthModalOpen(true)}
+          onOpenChat={() => setIsChatOpen(true)}
+          onOpenFlutterCode={() => setIsFlutterCodeOpen(true)}
+          user={userProfile}
+          currentLanguage={currentLanguage}
+          onSelectLanguage={setCurrentLanguage}
+          watchlistCount={stocks.length}
+          activeWatchlistName={activeWatchlist.name}
+          marketFilter={marketFilter}
+          onFilterChange={setMarketFilter}
+          notifications={notifications}
+          onMarkAllNotificationsRead={() =>
+            setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+          }
+          onClearNotifications={() => setNotifications([])}
+          onSelectStockSymbol={(symbol) => {
+            const s = stocks.find((st) => st.symbol === symbol);
+            if (s) setSelectedStock(s);
+          }}
+          t={t}
+        />
+      }
+      sidebar={
         <WatchlistSidebar
           stocks={stocks}
           selectedStock={selectedStock}
@@ -598,17 +603,29 @@ export default function App() {
           t={t}
           marketSessionStatus={marketSessionStatus}
         />
-
-        {/* Central Stock Prediction Terminal (Right) */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-6 max-w-6xl mx-auto w-full">
-          {/* Analysis Depth Selector: Beginner, Medium, Expert */}
+      }
+      watchlistContent={
+        <WatchlistSidebar
+          stocks={stocks}
+          selectedStock={selectedStock}
+          onSelectStock={setSelectedStock}
+          marketFilter={marketFilter}
+          watchlists={watchlists}
+          activeWatchlistId={activeWatchlistId}
+          onSelectWatchlist={setActiveWatchlistId}
+          onOpenWatchlistManager={() => setIsWatchlistModalOpen(true)}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          t={t}
+          marketSessionStatus={marketSessionStatus}
+        />
+      }
+      terminalContent={
+        <div className="space-y-6">
           <AnalysisModeSelector
             currentLevel={analysisLevel}
             onSelectLevel={setAnalysisLevel}
             t={t}
           />
-
-          {/* Real-time Streaming Feed Indicator Bar (Updates without reload) */}
           <RealTimeFeedIndicator
             lastUpdated={lastUpdated}
             isUpdating={isUpdating}
@@ -626,8 +643,6 @@ export default function App() {
             }
             onOpenAudit={() => setIsPostMarketAuditOpen(true)}
           />
-
-          {/* Beginner Mode Friendly Explainer Card (Shows if in BEGINNER mode) */}
           {analysisLevel === 'BEGINNER' && (
             <div className="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/40 border border-emerald-600/40 rounded-2xl p-4 sm:p-5 shadow-lg space-y-2">
               <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
@@ -658,9 +673,8 @@ export default function App() {
           )}
 
           {/* Stock Hero Card */}
-          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-2xl backdrop-blur-md">
+          <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-md">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              {/* Left: Ticker & Company */}
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2.5 flex-wrap">
                   <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
@@ -672,7 +686,6 @@ export default function App() {
                   <span className="text-xs px-2.5 py-0.5 rounded-md bg-indigo-950/80 border border-indigo-700/60 text-indigo-300 font-semibold">
                     {selectedStock.sector}
                   </span>
-                  {/* Ruling Planet Badge */}
                   <span
                     className="text-xs px-2.5 py-0.5 rounded-md bg-amber-950/50 border border-amber-800/60 text-amber-300 font-semibold flex items-center gap-1 cursor-pointer"
                     onClick={() => setIsRadarOpen(true)}
@@ -697,7 +710,6 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Right: Live Price & Day Change */}
               <div className="flex md:flex-col items-baseline md:items-end justify-between gap-2">
                 <div className="text-3xl sm:text-4xl font-mono font-black tracking-tight text-slate-100 flex items-center gap-2">
                   <span>
@@ -748,7 +760,6 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Prominent Predicted Target Badge */}
                 <div className="flex items-center justify-end mt-1">
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-cyan-950/70 border border-cyan-500/60 text-cyan-200 font-mono text-xs font-black shadow-inner">
                     <Target className="w-3.5 h-3.5 text-cyan-400" />
@@ -780,135 +791,213 @@ export default function App() {
             </div>
           </div>
 
-          {/* Prominent Predicted Target Amount & Profit Potential Banner */}
           <PredictedTargetHeroBanner
             stock={selectedStock}
             t={t}
             onOpenAudit={() => setIsPostMarketAuditOpen(true)}
           />
 
-          {/* Interactive Chart Section */}
           <InteractiveChart stock={selectedStock} />
 
-          {/* 3-Pillar Prediction Panel (Core Engine) */}
           <PredictionPanel
             stock={selectedStock}
             onUpdatePrediction={handleUpdatePrediction}
           />
 
-          {/* Advanced Multi-Model Suite (Technicals + Fundamentals + Astro) */}
           <AdvancedModelsCard stock={selectedStock} />
 
-          {/* Cross-Field & Global Macro Dependencies Web */}
           <MacroDependencyWeb stock={selectedStock} />
 
-          {/* Vedic Financial Astrology Deep Dive Card */}
           <AstroProfileCard stock={selectedStock} />
 
-          {/* Quantitative Momentum & Oscillators Card */}
           <QuantTechnicalsCard stock={selectedStock} />
-        </main>
-      </div>
+        </div>
+      }
+      predictionContent={
+        <div className="space-y-6">
+          <PredictedTargetHeroBanner
+            stock={selectedStock}
+            t={t}
+            onOpenAudit={() => setIsPostMarketAuditOpen(true)}
+          />
+          <PredictionPanel
+            stock={selectedStock}
+            onUpdatePrediction={handleUpdatePrediction}
+          />
+          <AdvancedModelsCard stock={selectedStock} />
+        </div>
+      }
+      astroMacroContent={
+        <div className="space-y-6">
+          <AstroProfileCard stock={selectedStock} />
+          <MacroDependencyWeb stock={selectedStock} />
+          <QuantTechnicalsCard stock={selectedStock} />
+        </div>
+      }
+      bottomNav={
+        <BottomNavBar
+          onOpenChat={() => setIsChatOpen(true)}
+          onOpenFlutterCode={() => setIsFlutterCodeOpen(true)}
+          watchlistCount={stocks.length}
+        />
+      }
+      onOpenChat={() => setIsChatOpen(true)}
+      onOpenFlutterCode={() => setIsFlutterCodeOpen(true)}
+      watchlistCount={stocks.length}
+      floatingBot={
+        <button
+          onClick={() => setIsChatOpen(true)}
+          className="fixed bottom-5 right-5 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs tracking-wide shadow-2xl shadow-indigo-950 border border-cyan-400/50 hover:scale-105 transition-all cursor-pointer group"
+          title="Chat with AI Market Expert"
+        >
+          <span className="relative flex items-center justify-center">
+            <Bot className="w-4 h-4 text-white" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          </span>
+          <span className="hidden sm:inline">{t.askAiMarketExpert}</span>
+          <span className="sm:hidden">{t.aiMarketExpert}</span>
+        </button>
+      }
+      modals={
+        <>
+          <StockSearchModal
+            isOpen={isSearchOpen}
+            onClose={() => setIsSearchOpen(false)}
+            stocks={stocks}
+            onSelectStock={setSelectedStock}
+            onAddCustomStock={handleAddCustomStock}
+            activeWatchlistName={activeWatchlist.name}
+            activeWatchlistStockIds={activeWatchlist.stockIds}
+            onToggleStockInWatchlist={(stockId) => {
+              handleToggleStockInWatchlist(activeWatchlistId, stockId);
+            }}
+          />
 
-      {/* Modals */}
-      <StockSearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        stocks={stocks}
-        onSelectStock={setSelectedStock}
-        onAddCustomStock={handleAddCustomStock}
-      />
+          <AstroRadarModal
+            isOpen={isRadarOpen}
+            onClose={() => setIsRadarOpen(false)}
+          />
 
-      <AstroRadarModal
-        isOpen={isRadarOpen}
-        onClose={() => setIsRadarOpen(false)}
-      />
+          <WatchlistManagerModal
+            isOpen={isWatchlistModalOpen}
+            onClose={() => setIsWatchlistModalOpen(false)}
+            watchlists={watchlists}
+            activeWatchlistId={activeWatchlistId}
+            onSelectWatchlist={(id) => {
+              setActiveWatchlistId(id);
+              setIsWatchlistModalOpen(false);
+            }}
+            onCreateWatchlist={handleCreateWatchlist}
+            onDeleteWatchlist={handleDeleteWatchlist}
+            onRenameWatchlist={handleRenameWatchlist}
+            onToggleStockInWatchlist={handleToggleStockInWatchlist}
+            allStocks={stocks}
+          />
 
-      <WatchlistManagerModal
-        isOpen={isWatchlistModalOpen}
-        onClose={() => setIsWatchlistModalOpen(false)}
-        watchlists={watchlists}
-        activeWatchlistId={activeWatchlistId}
-        onSelectWatchlist={(id) => {
-          setActiveWatchlistId(id);
-          setIsWatchlistModalOpen(false);
-        }}
-        onCreateWatchlist={handleCreateWatchlist}
-        onDeleteWatchlist={handleDeleteWatchlist}
-        onRenameWatchlist={handleRenameWatchlist}
-        onToggleStockInWatchlist={handleToggleStockInWatchlist}
-        allStocks={stocks}
-      />
+          <AlertsManagerModal
+            isOpen={isAlertsModalOpen}
+            onClose={() => setIsAlertsModalOpen(false)}
+            selectedStock={selectedStock}
+            stocks={stocks}
+            alerts={alerts}
+            onCreateAlert={handleCreateAlert}
+            onToggleAlert={handleToggleAlert}
+            onDeleteAlert={handleDeleteAlert}
+            onClearTriggered={handleClearTriggeredAlerts}
+            browserNotificationsEnabled={browserNotificationsEnabled}
+            onRequestBrowserPermission={handleRequestBrowserPermission}
+          />
 
-      <AlertsManagerModal
-        isOpen={isAlertsModalOpen}
-        onClose={() => setIsAlertsModalOpen(false)}
-        selectedStock={selectedStock}
-        stocks={stocks}
-        alerts={alerts}
-        onCreateAlert={handleCreateAlert}
-        onToggleAlert={handleToggleAlert}
-        onDeleteAlert={handleDeleteAlert}
-        onClearTriggered={handleClearTriggeredAlerts}
-        browserNotificationsEnabled={browserNotificationsEnabled}
-        onRequestBrowserPermission={handleRequestBrowserPermission}
-      />
+          <ExportModal
+            isOpen={isExportModalOpen}
+            onClose={() => setIsExportModalOpen(false)}
+            stocks={stocks.filter((s) => activeWatchlist.stockIds.includes(s.id))}
+            alerts={alerts}
+            watchlistName={activeWatchlist.name}
+          />
 
-      <ExportModal
-        isOpen={isExportModalOpen}
-        onClose={() => setIsExportModalOpen(false)}
-        stocks={stocks.filter((s) => activeWatchlist.stockIds.includes(s.id))}
-        alerts={alerts}
-        watchlistName={activeWatchlist.name}
-      />
+          <PostMarketAuditModal
+            isOpen={isPostMarketAuditOpen}
+            onClose={() => setIsPostMarketAuditOpen(false)}
+            selectedStock={selectedStock}
+            allStocks={stocks}
+            onSelectStock={setSelectedStock}
+            t={t}
+          />
 
-      <PostMarketAuditModal
-        isOpen={isPostMarketAuditOpen}
-        onClose={() => setIsPostMarketAuditOpen(false)}
-        selectedStock={selectedStock}
-        allStocks={stocks}
-        onSelectStock={setSelectedStock}
-        t={t}
-      />
+          <GoogleAuthModal
+            isOpen={isGoogleAuthModalOpen}
+            onClose={() => setIsGoogleAuthModalOpen(false)}
+            user={userProfile}
+            onSignIn={setUserProfile}
+            onSignOut={() =>
+              setUserProfile({
+                name: '',
+                email: '',
+                avatar: '',
+                isSignedIn: false,
+                syncedWatchlistsCount: 0
+              })
+            }
+            onOpenSearch={() => setIsSearchOpen(true)}
+          />
 
-      <GoogleAuthModal
-        isOpen={isGoogleAuthModalOpen}
-        onClose={() => setIsGoogleAuthModalOpen(false)}
-        user={userProfile}
-        onSignIn={setUserProfile}
-        onSignOut={() =>
-          setUserProfile({
-            name: '',
-            email: '',
-            avatar: '',
-            isSignedIn: false,
-            syncedWatchlistsCount: 0
-          })
-        }
-        onOpenSearch={() => setIsSearchOpen(true)}
-      />
+          <AstroQuantChatModal
+            isOpen={isChatOpen}
+            onClose={() => setIsChatOpen(false)}
+            currentStock={selectedStock}
+            language={currentLanguage}
+            allStocks={stocks}
+            activeWatchlistName={activeWatchlist.name}
+            activeWatchlistStockIds={activeWatchlist.stockIds}
+            onAddToWatchlist={(stockToAdd) => {
+              setStocks((prev) => {
+                const exists = prev.some((s) => s.id === stockToAdd.id || s.symbol === stockToAdd.symbol);
+                return exists ? prev : [stockToAdd, ...prev];
+              });
+              setWatchlists((prev) =>
+                prev.map((w) =>
+                  w.id === activeWatchlistId
+                    ? {
+                        ...w,
+                        stockIds: w.stockIds.includes(stockToAdd.id) ? w.stockIds : [...w.stockIds, stockToAdd.id]
+                      }
+                    : w
+                )
+              );
+              setNotifications((prev) => [
+                {
+                  id: `notif-${Date.now()}`,
+                  title: `Added ${stockToAdd.symbol} to Watchlist`,
+                  message: `${stockToAdd.name} added to "${activeWatchlist.name}" at ${stockToAdd.currency}${stockToAdd.price.toFixed(2)} (Locked Target: ${stockToAdd.currency}${(stockToAdd.predictedAmount || stockToAdd.prediction.target1D).toFixed(2)})`,
+                  timestamp: new Date().toLocaleTimeString(),
+                  type: 'price_alert',
+                  read: false,
+                  symbol: stockToAdd.symbol
+                },
+                ...prev
+              ]);
+            }}
+            onSelectStock={(stk) => {
+              setSelectedStock(stk);
+              setIsChatOpen(false);
+            }}
+          />
 
-      {/* Floating Ask AI Market Expert Chat Button (Exact label requested: Ask AI Market Expert, NOT astro in label) */}
-      <button
-        onClick={() => setIsChatOpen(true)}
-        className="fixed bottom-5 right-5 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs tracking-wide shadow-2xl shadow-indigo-950 border border-cyan-400/50 hover:scale-105 transition-all cursor-pointer group"
-        title="Chat with AI Market Expert"
-      >
-        <span className="relative flex items-center justify-center">
-          <Bot className="w-4 h-4 text-white" />
-          <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-        </span>
-        <span className="hidden sm:inline">{t.askAiMarketExpert}</span>
-        <span className="sm:hidden">{t.aiMarketExpert}</span>
-      </button>
+          <FlutterCodeHubModal
+            isOpen={isFlutterCodeOpen}
+            onClose={() => setIsFlutterCodeOpen(false)}
+          />
+        </>
+      }
+    />
+  );
+}
 
-      {/* Astro-Quant Expert Chat Modal */}
-      <AstroQuantChatModal
-        isOpen={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
-        currentStock={selectedStock}
-        language={currentLanguage}
-      />
-    </div>
+export default function App() {
+  return (
+    <ResponsiveProvider>
+      <AppContent />
+    </ResponsiveProvider>
   );
 }
