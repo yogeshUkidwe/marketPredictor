@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 export type DeviceMode = 'auto' | 'app' | 'tab' | 'web';
 export type EffectiveDeviceMode = 'app' | 'tab' | 'web';
 
-export type FlutterNavDestination = 'terminal' | 'watchlist' | 'predictions' | 'astromacro' | 'expert' | 'flutter_code';
+export type FlutterNavDestination = 'markets' | 'terminal' | 'watchlist' | 'predictions' | 'astromacro' | 'profile' | 'expert' | 'flutter_code';
 
 export interface ResponsiveContextValue {
   /** User-selected device mode ('auto' | 'app' | 'tab' | 'web') */
@@ -24,6 +24,10 @@ export interface ResponsiveContextValue {
   drawerOpen: boolean;
   setDrawerOpen: (open: boolean) => void;
   toggleDrawer: () => void;
+  /** Top bar scroll behavior: 'sticky' (pinned) vs 'scroll' (scrolls with page) */
+  topBarScrollMode: 'sticky' | 'scroll';
+  setTopBarScrollMode: (mode: 'sticky' | 'scroll') => void;
+  toggleTopBarScrollMode: () => void;
 }
 
 export interface FlutterDestinationItem {

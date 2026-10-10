@@ -15,6 +15,7 @@ interface WatchlistSidebarProps {
   onOpenSearch?: () => void;
   t: TranslationDictionary;
   marketSessionStatus: 'OPEN' | 'CLOSED';
+  isLightMode?: boolean;
 }
 
 const SECTOR_TAGS: (Sector | 'ALL')[] = [
@@ -42,7 +43,8 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
   onOpenWatchlistManager,
   onOpenSearch,
   t,
-  marketSessionStatus
+  marketSessionStatus,
+  isLightMode = false
 }) => {
   const [search, setSearch] = useState('');
   const [selectedSector, setSelectedSector] = useState<Sector | 'ALL'>('ALL');
@@ -129,18 +131,28 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-slate-950/85 border-r border-slate-800/80 w-full lg:w-84 xl:w-96 shrink-0 backdrop-blur-md">
+    <div
+      className={`flex flex-col h-full border-r w-full lg:w-84 xl:w-96 shrink-0 backdrop-blur-md transition-colors ${
+        isLightMode
+          ? 'bg-white/95 border-slate-300 text-slate-900 shadow-sm'
+          : 'bg-slate-950/85 border-slate-800/80 text-white'
+      }`}
+    >
       {/* Header bar */}
-      <div className="p-3.5 border-b border-slate-800/80 space-y-3">
+      <div className={`p-3.5 border-b space-y-3 ${isLightMode ? 'border-slate-200' : 'border-slate-800/80'}`}>
         {/* Watchlist switcher dropdown & manage button */}
         <div className="flex items-center justify-between gap-2">
           {watchlists.length > 0 && onSelectWatchlist ? (
             <div className="flex items-center gap-1.5 flex-1 min-w-0">
-              <Star className="w-4 h-4 text-amber-400 fill-amber-400 shrink-0" />
+              <Star className="w-4 h-4 text-amber-500 fill-amber-500 shrink-0" />
               <select
                 value={activeWatchlistId}
                 onChange={(e) => onSelectWatchlist(e.target.value)}
-                className="bg-slate-900 border border-slate-800 rounded px-2 py-1 text-xs font-bold text-slate-100 focus:outline-none focus:border-indigo-500 cursor-pointer truncate flex-1"
+                className={`border rounded px-2 py-1 text-xs font-bold focus:outline-none cursor-pointer truncate flex-1 ${
+                  isLightMode
+                    ? 'bg-slate-100 border-slate-300 text-slate-900 focus:border-blue-500'
+                    : 'bg-slate-900 border-slate-800 text-slate-100 focus:border-indigo-500'
+                }`}
               >
                 {watchlists.map((wl) => (
                   <option key={wl.id} value={wl.id}>
@@ -151,8 +163,8 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-              <h2 className="text-sm font-bold text-slate-100 tracking-wide">
+              <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+              <h2 className={`text-sm font-bold tracking-wide ${isLightMode ? 'text-slate-900' : 'text-slate-100'}`}>
                 {t.watchlist}
               </h2>
             </div>
@@ -162,7 +174,9 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
             {onOpenWatchlistManager && (
               <button
                 onClick={onOpenWatchlistManager}
-                className="p-1 text-slate-400 hover:text-slate-100 rounded hover:bg-slate-800 transition-colors cursor-pointer"
+                className={`p-1 rounded transition-colors cursor-pointer ${
+                  isLightMode ? 'text-slate-500 hover:text-slate-900 hover:bg-slate-200' : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
+                }`}
                 title="Manage Watchlists (Add/Remove)"
               >
                 <Settings2 className="w-3.5 h-3.5" />
@@ -172,7 +186,11 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="text-[11px] bg-slate-900 border border-slate-800 rounded px-2 py-1 text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className={`text-[11px] border rounded px-2 py-1 focus:outline-none cursor-pointer ${
+                isLightMode
+                  ? 'bg-slate-100 border-slate-300 text-slate-800 focus:border-blue-500'
+                  : 'bg-slate-900 border-slate-800 text-slate-300 focus:border-indigo-500'
+              }`}
             >
               <option value="ASTRO">★ {t.sortAstro}</option>
               <option value="PREDICTED">🎯 {t.sortPredicted}</option>
@@ -185,13 +203,17 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
 
         {/* Quick Search */}
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className={`w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 ${isLightMode ? 'text-slate-500' : 'text-slate-400'}`} />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t.filterWatchlist}
-            className="w-full pl-8 pr-3 py-1.5 bg-slate-900/90 border border-slate-800 rounded-lg text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500"
+            className={`w-full pl-8 pr-3 py-1.5 border rounded-lg text-xs focus:outline-none ${
+              isLightMode
+                ? 'bg-slate-100 border-slate-300 text-slate-900 placeholder:text-slate-500 focus:border-blue-500'
+                : 'bg-slate-900/90 border-slate-800 text-slate-200 placeholder:text-slate-500 focus:border-indigo-500'
+            }`}
           />
           {search && (
             <button
@@ -206,9 +228,13 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
         {onOpenSearch && (
           <button
             onClick={onOpenSearch}
-            className="w-full py-1.5 px-3 rounded-lg bg-gradient-to-r from-cyan-600/20 via-indigo-600/20 to-purple-600/20 hover:from-cyan-600/30 hover:to-indigo-600/30 border border-cyan-500/40 text-cyan-200 text-[11px] font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer"
+            className={`w-full py-1.5 px-3 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1.5 shadow-xs transition-all cursor-pointer border ${
+              isLightMode
+                ? 'bg-blue-50 hover:bg-blue-100 text-blue-900 border-blue-300'
+                : 'bg-gradient-to-r from-cyan-600/20 via-indigo-600/20 to-purple-600/20 hover:from-cyan-600/30 hover:to-indigo-600/30 border-cyan-500/40 text-cyan-200'
+            }`}
           >
-            <Search className="w-3.5 h-3.5 text-cyan-400" />
+            <Search className={`w-3.5 h-3.5 ${isLightMode ? 'text-blue-600' : 'text-cyan-400'}`} />
             <span>+ Search / Add Any Indian Stock (NSE/BSE)</span>
           </button>
         )}
@@ -223,14 +249,18 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
               <button
                 key={sector}
                 onClick={() => setSelectedSector(sector)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-medium whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 border ${
                   selectedSector === sector
-                    ? 'bg-indigo-600 text-white shadow-sm ring-1 ring-indigo-400'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-slate-800/80'
+                    ? isLightMode
+                      ? 'bg-blue-600 text-white border-blue-400 shadow-sm'
+                      : 'bg-indigo-600 text-white border-indigo-500 shadow-sm ring-1 ring-indigo-400'
+                    : isLightMode
+                    ? 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-300'
+                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 hover:bg-slate-800 border-slate-800/80'
                 }`}
               >
                 <span>{getSectorLabel(sector)}</span>
-                <span className="text-[10px] px-1 py-0.2 rounded bg-black/30 font-mono text-slate-300">
+                <span className={`text-[10px] px-1 py-0.2 rounded font-mono ${isLightMode ? 'bg-black/10 text-slate-900' : 'bg-black/30 text-slate-300'}`}>
                   {count}
                 </span>
               </button>
@@ -266,45 +296,64 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
               <button
                 key={stock.id}
                 onClick={() => onSelectStock(stock)}
-                className={`w-full text-left p-3 transition-all flex items-center justify-between group cursor-pointer ${
-                  isSelected
-                    ? 'bg-indigo-950/45 border-l-4 border-cyan-400 shadow-inner'
-                    : 'hover:bg-slate-900/70 border-l-4 border-transparent'
+                className={`w-full text-left p-3.5 transition-all flex items-center justify-between group cursor-pointer border-b ${
+                  isLightMode
+                    ? isSelected
+                      ? 'bg-blue-50/90 border-l-4 border-l-blue-600 border-b-slate-200 ring-1 ring-blue-300 shadow-sm'
+                      : 'hover:bg-slate-100/70 border-l-4 border-l-transparent border-b-slate-200'
+                    : isSelected
+                    ? 'bg-slate-900 border-l-4 border-l-cyan-400 border-b-slate-800/80 ring-1 ring-cyan-500/30 shadow-md'
+                    : 'hover:bg-slate-900/90 border-l-4 border-l-transparent border-b-slate-800/80'
                 }`}
               >
                 {/* Left: Symbol, Company & Sector */}
-                <div className="space-y-1 min-w-0 pr-2">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="font-bold text-sm text-slate-100 group-hover:text-cyan-300 transition-colors">
+                <div className="space-y-1.5 min-w-0 pr-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`font-black text-base transition-colors ${
+                      isLightMode ? 'text-slate-950 group-hover:text-blue-600' : 'text-white group-hover:text-cyan-300'
+                    }`}>
                       {stock.symbol}
                     </span>
-                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 font-mono">
+                    {/* Non-Clickable Read-Only Informational Tag: EXCHANGE */}
+                    <span className={`text-[10px] px-1.5 py-0.5 rounded border font-mono font-bold select-text cursor-default ${
+                      isLightMode ? 'bg-slate-100 border-slate-300 text-slate-800' : 'bg-slate-950 border-slate-700 text-slate-300'
+                    }`}>
                       {stock.exchange}
                     </span>
-                    {/* Ruling Planet badge */}
+                    {/* Non-Clickable Read-Only Informational Tag: PLANET */}
                     <span
-                      className="text-[10px] px-1.5 py-0.2 rounded bg-amber-950/30 border border-amber-900/40 text-amber-300 font-mono"
-                      title={`Ruling Planet: ${stock.astroProfile.rulingPlanet}`}
+                      className={`text-[10px] px-2 py-0.5 rounded border font-bold select-text cursor-default ${
+                        isLightMode ? 'bg-amber-100 border-amber-400 text-amber-900' : 'bg-amber-950/70 border-amber-600/70 text-amber-200'
+                      }`}
+                      title={`Astrological Ruling Planet: ${stock.astroProfile.rulingPlanet}`}
                     >
                       {getPlanetSymbol(stock.astroProfile.rulingPlanet)} {stock.astroProfile.rulingPlanet}
                     </span>
                   </div>
 
-                  <div className="text-[11px] text-slate-400 truncate max-w-[170px]">
+                  <div className={`text-xs font-medium truncate max-w-[200px] ${
+                    isLightMode ? 'text-slate-700' : 'text-slate-200'
+                  }`}>
                     {stock.name}
                   </div>
 
-                  {/* Sector & Signal */}
-                  <div className="flex items-center gap-2 text-[10px]">
-                    <span className="text-slate-400 font-medium">{stock.sector}</span>
-                    <span className="text-slate-600">•</span>
+                  {/* Sector & Signal (High Contrast) */}
+                  <div className="flex items-center gap-2 text-[11px] font-semibold">
+                    <span className={isLightMode ? 'text-indigo-700 font-bold' : 'text-indigo-300'}>{stock.sector}</span>
+                    <span className={isLightMode ? 'text-slate-400' : 'text-slate-600'}>•</span>
                     <span
-                      className={`font-semibold ${
+                      className={`px-1.5 py-0.2 rounded font-mono ${
                         stock.technicals.signal.includes('BUY')
-                          ? 'text-emerald-400'
+                          ? isLightMode
+                            ? 'text-emerald-800 bg-emerald-100 border border-emerald-400 font-bold'
+                            : 'text-emerald-300 bg-emerald-950/80 border border-emerald-600/60 font-bold'
                           : stock.technicals.signal.includes('SELL')
-                          ? 'text-rose-400'
-                          : 'text-amber-400'
+                          ? isLightMode
+                            ? 'text-rose-800 bg-rose-100 border border-rose-400 font-bold'
+                            : 'text-rose-300 bg-rose-950/80 border border-rose-600/60 font-bold'
+                          : isLightMode
+                          ? 'text-amber-800 bg-amber-100 border border-amber-400 font-bold'
+                          : 'text-amber-300 bg-amber-950/80 border border-amber-600/60 font-bold'
                       }`}
                     >
                       {stock.technicals.signal}
@@ -312,54 +361,64 @@ export const WatchlistSidebar: React.FC<WatchlistSidebarProps> = ({
                   </div>
                 </div>
 
-                {/* Right: Live Price, Daily Change, and PROMINENT PREDICTED VALUE */}
-                <div className="text-right shrink-0 space-y-1">
-                  {/* Current Live Price */}
-                  <div className="font-mono font-black text-sm text-slate-100">
+                {/* Right: Live Price, Daily Change, and High-Contrast Target */}
+                <div className="text-right shrink-0 space-y-1.5">
+                  {/* Current Live Price (Large High Contrast) */}
+                  <div className={`font-mono font-black text-base ${isLightMode ? 'text-slate-950' : 'text-white'}`}>
                     {stock.currency}{stock.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
 
                   {/* Day Change */}
-                  <div
-                    className={`inline-flex items-center font-mono text-[11px] font-bold px-1.5 py-0.2 rounded ${
-                      isPositive
-                        ? 'text-emerald-300 bg-emerald-950/40 border border-emerald-800/40'
-                        : 'text-rose-300 bg-rose-950/40 border border-rose-800/40'
-                    }`}
-                  >
-                    {isPositive ? (
-                      <TrendingUp className="w-3 h-3 mr-0.5 inline" />
-                    ) : (
-                      <TrendingDown className="w-3 h-3 mr-0.5 inline" />
-                    )}
-                    {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
-                  </div>
-
-                  {/* Prominent PREDICTED VALUE Badge (Locked Pre-market target) */}
-                  <div className="flex items-center justify-end gap-1">
-                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/50 text-cyan-200 font-mono text-[11px] font-black shadow-xs">
-                      <Target className="w-2.5 h-2.5 text-cyan-400 shrink-0" />
-                      <span>{t.predShort}: {stock.currency}{predPrice.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                  <div>
+                    <span
+                      className={`inline-flex items-center font-mono text-xs font-extrabold px-2 py-0.5 rounded border ${
+                        isPositive
+                          ? isLightMode
+                            ? 'text-emerald-900 bg-emerald-100 border-emerald-400'
+                            : 'text-emerald-200 bg-emerald-950/90 border-emerald-500'
+                          : isLightMode
+                          ? 'text-rose-900 bg-rose-100 border-rose-400'
+                          : 'text-rose-200 bg-rose-950/90 border-rose-500'
+                      }`}
+                    >
+                      {isPositive ? (
+                        <TrendingUp className={`w-3.5 h-3.5 mr-1 inline ${isLightMode ? 'text-emerald-700' : 'text-emerald-400'}`} />
+                      ) : (
+                        <TrendingDown className={`w-3.5 h-3.5 mr-1 inline ${isLightMode ? 'text-rose-700' : 'text-rose-400'}`} />
+                      )}
+                      {isPositive ? '+' : ''}{stock.changePercent.toFixed(2)}%
                     </span>
                   </div>
 
-                  {/* Post-Market Match Result (Shows if market closed or in audit mode) */}
+                  {/* High Contrast PREDICTED VALUE Badge */}
+                  <div className="flex items-center justify-end">
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border-2 font-mono text-xs font-black shadow-sm ${
+                      isLightMode
+                        ? 'bg-amber-100 border-amber-400 text-amber-950'
+                        : 'bg-amber-950/90 border-2 border-amber-400 text-amber-200'
+                    }`}>
+                      <Target className={`w-3 h-3 shrink-0 ${isLightMode ? 'text-amber-700' : 'text-amber-400'}`} />
+                      <span>Target: {stock.currency}{predPrice.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}</span>
+                    </span>
+                  </div>
+
+                  {/* Post-Market Match Result or Astro % */}
                   {marketSessionStatus === 'CLOSED' ? (
                     <div className="pt-0.5">
                       {isMatched ? (
-                        <span className="inline-flex items-center gap-1 text-[9px] font-bold font-mono px-1.5 py-0.2 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/60">
-                          <CheckCircle2 className="w-2.5 h-2.5 text-emerald-400" />
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-200 border border-emerald-500">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
                           <span>Matched</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-[9px] font-bold font-mono px-1.5 py-0.2 rounded bg-rose-950/80 text-rose-300 border border-rose-700/60">
-                          <AlertTriangle className="w-2.5 h-2.5 text-rose-400" />
-                          <span>Missed ({predDiffPct > 0 ? '+' : ''}{predDiffPct}%)</span>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-200 border border-rose-500">
+                          <AlertTriangle className="w-3 h-3 text-rose-400" />
+                          <span>Diff ({predDiffPct > 0 ? '+' : ''}{predDiffPct}%)</span>
                         </span>
                       )}
                     </div>
                   ) : (
-                    <div className="text-[10px] text-amber-400/90 font-mono">
+                    <div className="text-[11px] text-amber-300 font-mono font-bold">
                       <span>★ Astro {stock.astroProfile.astroScore}%</span>
                     </div>
                   )}

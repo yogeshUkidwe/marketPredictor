@@ -33,7 +33,7 @@ export const ResponsiveProvider: React.FC<ResponsiveProviderProps> = ({ children
     detectEffectiveMode(deviceMode)
   );
 
-  const [activeTab, setActiveTab] = useState<FlutterNavDestination>('terminal');
+  const [activeTab, setActiveTab] = useState<FlutterNavDestination>('markets');
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   const updateEffectiveMode = useCallback(() => {
@@ -63,6 +63,31 @@ export const ResponsiveProvider: React.FC<ResponsiveProviderProps> = ({ children
   const isTablet = effectiveMode === 'tab';
   const isDesktop = effectiveMode === 'web';
 
+  const [topBarScrollMode, setTopBarScrollModeState] = useState<'sticky' | 'scroll'>(() => {
+    try {
+      const saved = localStorage.getItem('astroquant_topbar_scroll');
+      if (saved === 'sticky' || saved === 'scroll') return saved;
+    } catch (e) {}
+    return 'sticky';
+  });
+
+  const setTopBarScrollMode = (mode: 'sticky' | 'scroll') => {
+    setTopBarScrollModeState(mode);
+    try {
+      localStorage.setItem('astroquant_topbar_scroll', mode);
+    } catch (e) {}
+  };
+
+  const toggleTopBarScrollMode = () => {
+    setTopBarScrollModeState((prev) => {
+      const next = prev === 'sticky' ? 'scroll' : 'sticky';
+      try {
+        localStorage.setItem('astroquant_topbar_scroll', next);
+      } catch (e) {}
+      return next;
+    });
+  };
+
   const value: ResponsiveContextValue = {
     deviceMode,
     effectiveMode,
@@ -74,7 +99,10 @@ export const ResponsiveProvider: React.FC<ResponsiveProviderProps> = ({ children
     setActiveTab,
     drawerOpen,
     setDrawerOpen,
-    toggleDrawer
+    toggleDrawer,
+    topBarScrollMode,
+    setTopBarScrollMode,
+    toggleTopBarScrollMode
   };
 
   return <ResponsiveContext.Provider value={value}>{children}</ResponsiveContext.Provider>;

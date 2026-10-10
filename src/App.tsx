@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Stock, StockPrediction, WatchlistGroup, PriceAlert, AppNotification } from './types';
 import { buildTop50Watchlist } from './data/top50Stocks';
 import { Header } from './components/Header';
-import { GlobalMacroBar } from './components/GlobalMacroBar';
+import { MovingMarketTickerBar } from './components/MovingMarketTickerBar';
 import { WatchlistSidebar } from './components/WatchlistSidebar';
 import { InteractiveChart } from './components/InteractiveChart';
 import { PredictionPanel } from './components/PredictionPanel';
@@ -18,11 +18,14 @@ import { WatchlistManagerModal } from './components/WatchlistManagerModal';
 import { AlertsManagerModal } from './components/AlertsManagerModal';
 import { ExportModal } from './components/ExportModal';
 import { PostMarketAuditModal } from './components/PostMarketAuditModal';
-import { GoogleAuthModal, UserProfile } from './components/GoogleAuthModal';
+import { GoogleAuthModal, UserProfile, AppTheme, ReadabilityMode } from './components/GoogleAuthModal';
 import { AnalysisModeSelector, AnalysisLevel } from './components/AnalysisModeSelector';
 import { AstroQuantChatModal } from './components/AstroQuantChatModal';
+import { SimpleStockView } from './components/SimpleStockView';
+import { WhatsAppSectorModal } from './components/WhatsAppSectorModal';
+import { ApkBuildModal } from './components/ApkBuildModal';
 import { Language, TRANSLATIONS } from './utils/translations';
-import { TrendingUp, TrendingDown, Star, BellRing, Sparkles, Shield, Compass, BookOpen, Layers, Bot, Target, Lock } from 'lucide-react';
+import { TrendingUp, TrendingDown, Star, BellRing, Sparkles, Shield, Compass, BookOpen, Layers, Bot, Target, Lock, Eye } from 'lucide-react';
 import {
   ResponsiveProvider,
   useResponsiveMode,
@@ -86,6 +89,46 @@ function AppContent() {
     } catch (e) {}
     return 'EXPERT';
   });
+
+  // View Mode: Simple View (All Ages, High Contrast) vs Pro Analytics View
+  const [viewMode, setViewMode] = useState<'SIMPLE' | 'PRO'>(() => {
+    try {
+      const saved = localStorage.getItem('astroquant_view_mode');
+      if (saved === 'PRO' || saved === 'SIMPLE') return saved;
+    } catch (e) {}
+    return 'SIMPLE';
+  });
+
+  // App Theme & Readability Accessibility
+  const [currentTheme, setCurrentTheme] = useState<AppTheme>(() => {
+    try {
+      const saved = localStorage.getItem('astroquant_theme') as AppTheme;
+      if (saved) return saved;
+    } catch (e) {}
+    return 'cosmic-dark';
+  });
+
+  const [readabilityMode, setReadabilityMode] = useState<ReadabilityMode>(() => {
+    try {
+      const saved = localStorage.getItem('astroquant_readability') as ReadabilityMode;
+      if (saved) return saved;
+    } catch (e) {}
+    return 'standard';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('astroquant_theme', currentTheme);
+      document.documentElement.setAttribute('data-theme', currentTheme);
+    } catch (e) {}
+  }, [currentTheme]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('astroquant_readability', readabilityMode);
+      document.documentElement.setAttribute('data-readability', readabilityMode);
+    } catch (e) {}
+  }, [readabilityMode]);
 
   // Google User Profile State
   const [userProfile, setUserProfile] = useState<UserProfile>(() => {
@@ -200,6 +243,8 @@ function AppContent() {
   const [isGoogleAuthModalOpen, setIsGoogleAuthModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isFlutterCodeOpen, setIsFlutterCodeOpen] = useState(false);
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false);
+  const [isApkModalOpen, setIsApkModalOpen] = useState(false);
 
   const t = TRANSLATIONS[currentLanguage] || TRANSLATIONS.en;
 
@@ -555,10 +600,11 @@ function AppContent() {
 
   const activeWatchlist = watchlists.find((w) => w.id === activeWatchlistId) || watchlists[0];
   const isPositive = selectedStock.changePercent >= 0;
+  const isLightMode = currentTheme === 'daylight-light';
 
   return (
     <AppShell
-      macroBar={<GlobalMacroBar />}
+      currentTheme={currentTheme}
       header={
         <Header
           onOpenRadar={() => setIsRadarOpen(true)}
@@ -570,6 +616,8 @@ function AppContent() {
           onOpenGoogleAuth={() => setIsGoogleAuthModalOpen(true)}
           onOpenChat={() => setIsChatOpen(true)}
           onOpenFlutterCode={() => setIsFlutterCodeOpen(true)}
+          onOpenWhatsApp={() => setIsWhatsAppModalOpen(true)}
+          onOpenApkBuild={() => setIsApkModalOpen(true)}
           user={userProfile}
           currentLanguage={currentLanguage}
           onSelectLanguage={setCurrentLanguage}
@@ -587,8 +635,24 @@ function AppContent() {
             if (s) setSelectedStock(s);
           }}
           t={t}
+          currentTheme={currentTheme}
+          onToggleTheme={() =>
+            setCurrentTheme((prev) => (prev === 'daylight-light' ? 'cosmic-dark' : 'daylight-light'))
+          }
         />
       }
+      tickerBar={
+        <MovingMarketTickerBar
+          stocks={stocks}
+          isLightMode={isLightMode}
+          onSelectStockSymbol={(symbol) => {
+            const s = stocks.find((st) => st.symbol === symbol);
+            if (s) setSelectedStock(s);
+          }}
+        />
+      }
+      onOpenProfile={() => setIsGoogleAuthModalOpen(true)}
+      user={userProfile}
       sidebar={
         <WatchlistSidebar
           stocks={stocks}
@@ -602,6 +666,7 @@ function AppContent() {
           onOpenSearch={() => setIsSearchOpen(true)}
           t={t}
           marketSessionStatus={marketSessionStatus}
+          isLightMode={isLightMode}
         />
       }
       watchlistContent={
@@ -617,60 +682,110 @@ function AppContent() {
           onOpenSearch={() => setIsSearchOpen(true)}
           t={t}
           marketSessionStatus={marketSessionStatus}
+          isLightMode={isLightMode}
         />
       }
       terminalContent={
-        <div className="space-y-6">
-          <AnalysisModeSelector
-            currentLevel={analysisLevel}
-            onSelectLevel={setAnalysisLevel}
-            t={t}
-          />
-          <RealTimeFeedIndicator
-            lastUpdated={lastUpdated}
-            isUpdating={isUpdating}
-            refreshInterval={refreshInterval}
-            onRefreshIntervalChange={(val) => {
-              setRefreshInterval(val);
-              setCountdown(val);
-            }}
-            onManualRefresh={executeRealTimeUpdate}
-            nextUpdateSeconds={countdown}
-            t={t}
-            marketSessionStatus={marketSessionStatus}
-            onToggleMarketSession={() =>
-              setMarketSessionStatus((prev) => (prev === 'OPEN' ? 'CLOSED' : 'OPEN'))
-            }
-            onOpenAudit={() => setIsPostMarketAuditOpen(true)}
-          />
-          {analysisLevel === 'BEGINNER' && (
-            <div className="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/40 border border-emerald-600/40 rounded-2xl p-4 sm:p-5 shadow-lg space-y-2">
-              <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
-                <BookOpen className="w-4 h-4 text-emerald-400" />
-                <span>Beginner's Plain-English Investment Verdict</span>
+        true ? (
+          <div className="space-y-6">
+          {/* Simple & Attractive Stock Hero View (High Contrast, All Ages, Large Legible Numbers) */}
+              {/* Simple & Attractive Hero View */}
+              <SimpleStockView
+                stock={selectedStock}
+                allStocks={stocks}
+                onSelectStock={setSelectedStock}
+                isInWatchlist={activeWatchlist.stockIds.includes(selectedStock.id)}
+                onToggleWatchlist={(s) => handleToggleStockInWatchlist(activeWatchlistId, s.id)}
+                onOpenChat={(prompt) => {
+                  setIsChatOpen(true);
+                }}
+                onOpenAlerts={() => setIsAlertsModalOpen(true)}
+                t={t}
+                marketSessionStatus={marketSessionStatus}
+                isLightMode={isLightMode}
+              />
+
+              {/* Clean Interactive Chart */}
+              <div
+                className={`border-2 rounded-3xl p-5 shadow-2xl transition-colors ${
+                  isLightMode
+                    ? 'bg-white border-slate-300 text-slate-900 shadow-slate-200/50'
+                    : 'bg-slate-900 border-slate-700 text-white'
+                }`}
+              >
+                <div className={`flex items-center justify-between pb-3 mb-3 border-b ${isLightMode ? 'border-slate-200' : 'border-slate-800'}`}>
+                  <div className="flex items-center gap-2">
+                    <Target className={`w-4 h-4 ${isLightMode ? 'text-blue-600' : 'text-cyan-400'}`} />
+                    <span className={`text-sm font-bold ${isLightMode ? 'text-slate-950' : 'text-white'}`}>
+                      Price Volatility & Target Trajectory Chart ({selectedStock.symbol})
+                    </span>
+                  </div>
+                  <span
+                    className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
+                      isLightMode
+                        ? 'bg-amber-100 text-amber-900 border-amber-300'
+                        : 'bg-amber-950/80 text-amber-300 border-amber-600/60'
+                    }`}
+                  >
+                    Target Line: {selectedStock.currency}{(selectedStock.predictedAmount || selectedStock.prediction.target1D).toFixed(2)}
+                  </span>
+                </div>
+                <InteractiveChart stock={selectedStock} />
               </div>
-              <p className="text-xs text-slate-200 leading-relaxed">
-                <strong>What to do: </strong>
-                {selectedStock.prediction.overallBias.includes('BULLISH')
-                  ? `Favorable buying territory. The stars and company profits indicate an upward swing toward ${selectedStock.currency}${selectedStock.prediction.target1W.toFixed(2)}.`
-                  : 'Wait patiently. Prices are taking a breather before the next planetary window.'}
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-sans text-xs">
-                <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-slate-400 block text-[10px]">Simple Safety Stop:</span>
-                  <strong className="text-rose-400 font-mono">{selectedStock.currency}{selectedStock.prediction.stopLoss.toFixed(2)}</strong>
-                </div>
-                <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-slate-400 block text-[10px]">Expected Profit Horizon:</span>
-                  <strong className="text-emerald-400 font-mono">{selectedStock.currency}{selectedStock.prediction.target1W.toFixed(2)} (+{selectedStock.prediction.expectedMovePercent}%)</strong>
-                </div>
-                <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-                  <span className="text-slate-400 block text-[10px]">Cosmic Star Support:</span>
-                  <strong className="text-amber-300">{selectedStock.astroProfile.rulingPlanet} (Auspicious)</strong>
-                </div>
-              </div>
+
             </div>
-          )}
+          ) : (
+            <>
+              <AnalysisModeSelector
+                currentLevel={analysisLevel}
+                onSelectLevel={setAnalysisLevel}
+                t={t}
+              />
+              <RealTimeFeedIndicator
+                lastUpdated={lastUpdated}
+                isUpdating={isUpdating}
+                refreshInterval={refreshInterval}
+                onRefreshIntervalChange={(val) => {
+                  setRefreshInterval(val);
+                  setCountdown(val);
+                }}
+                onManualRefresh={executeRealTimeUpdate}
+                nextUpdateSeconds={countdown}
+                t={t}
+                marketSessionStatus={marketSessionStatus}
+                onToggleMarketSession={() =>
+                  setMarketSessionStatus((prev) => (prev === 'OPEN' ? 'CLOSED' : 'OPEN'))
+                }
+                onOpenAudit={() => setIsPostMarketAuditOpen(true)}
+              />
+              {analysisLevel === 'BEGINNER' && (
+                <div className="bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/40 border border-emerald-600/40 rounded-2xl p-4 sm:p-5 shadow-lg space-y-2">
+                  <div className="flex items-center gap-2 text-emerald-300 font-bold text-sm">
+                    <BookOpen className="w-4 h-4 text-emerald-400" />
+                    <span>Beginner's Plain-English Investment Verdict</span>
+                  </div>
+                  <p className="text-xs text-slate-200 leading-relaxed">
+                    <strong>What to do: </strong>
+                    {selectedStock.prediction.overallBias.includes('BULLISH')
+                      ? `Favorable buying territory. The stars and company profits indicate an upward swing toward ${selectedStock.currency}${selectedStock.prediction.target1W.toFixed(2)}.`
+                      : 'Wait patiently. Prices are taking a breather before the next planetary window.'}
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 font-sans text-xs">
+                    <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block text-[10px]">Simple Safety Stop:</span>
+                      <strong className="text-rose-400 font-mono">{selectedStock.currency}{selectedStock.prediction.stopLoss.toFixed(2)}</strong>
+                    </div>
+                    <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block text-[10px]">Expected Profit Horizon:</span>
+                      <strong className="text-emerald-400 font-mono">{selectedStock.currency}{selectedStock.prediction.target1W.toFixed(2)} (+{selectedStock.prediction.expectedMovePercent}%)</strong>
+                    </div>
+                    <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
+                      <span className="text-slate-400 block text-[10px]">Cosmic Star Support:</span>
+                      <strong className="text-amber-300">{selectedStock.astroProfile.rulingPlanet} (Auspicious)</strong>
+                    </div>
+                  </div>
+                </div>
+              )}
 
           {/* Stock Hero Card */}
           <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-2xl backdrop-blur-md">
@@ -811,8 +926,9 @@ function AppContent() {
           <AstroProfileCard stock={selectedStock} />
 
           <QuantTechnicalsCard stock={selectedStock} />
-        </div>
-      }
+        </>
+      )
+    }
       predictionContent={
         <div className="space-y-6">
           <PredictedTargetHeroBanner
@@ -836,9 +952,10 @@ function AppContent() {
       }
       bottomNav={
         <BottomNavBar
-          onOpenChat={() => setIsChatOpen(true)}
-          onOpenFlutterCode={() => setIsFlutterCodeOpen(true)}
+          onOpenProfile={() => setIsGoogleAuthModalOpen(true)}
           watchlistCount={stocks.length}
+          user={userProfile}
+          isLightMode={isLightMode}
         />
       }
       onOpenChat={() => setIsChatOpen(true)}
@@ -847,15 +964,16 @@ function AppContent() {
       floatingBot={
         <button
           onClick={() => setIsChatOpen(true)}
-          className="fixed bottom-5 right-5 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs tracking-wide shadow-2xl shadow-indigo-950 border border-cyan-400/50 hover:scale-105 transition-all cursor-pointer group"
-          title="Chat with AI Market Expert"
+          className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-black text-xs tracking-wider shadow-2xl shadow-cyan-950/80 border-2 border-cyan-300/80 hover:scale-105 active:scale-95 transition-all cursor-pointer group"
+          title="Chat with AI Market Expert (Real-time analysis & quick watchlist additions)"
         >
           <span className="relative flex items-center justify-center">
-            <Bot className="w-4 h-4 text-white" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <Bot className="w-5 h-5 text-white" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping ring-2 ring-slate-950" />
           </span>
-          <span className="hidden sm:inline">{t.askAiMarketExpert}</span>
-          <span className="sm:hidden">{t.aiMarketExpert}</span>
+          <span className="font-extrabold uppercase hidden sm:inline">Ask AI Market Expert</span>
+          <span className="font-extrabold uppercase sm:hidden">AI Expert</span>
+          <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
         </button>
       }
       modals={
@@ -940,6 +1058,10 @@ function AppContent() {
               })
             }
             onOpenSearch={() => setIsSearchOpen(true)}
+            currentTheme={currentTheme}
+            onSelectTheme={setCurrentTheme}
+            readabilityMode={readabilityMode}
+            onSelectReadability={setReadabilityMode}
           />
 
           <AstroQuantChatModal
@@ -987,6 +1109,19 @@ function AppContent() {
           <FlutterCodeHubModal
             isOpen={isFlutterCodeOpen}
             onClose={() => setIsFlutterCodeOpen(false)}
+          />
+
+          <WhatsAppSectorModal
+            isOpen={isWhatsAppModalOpen}
+            onClose={() => setIsWhatsAppModalOpen(false)}
+            stocks={stocks}
+            isLightMode={isLightMode}
+          />
+
+          <ApkBuildModal
+            isOpen={isApkModalOpen}
+            onClose={() => setIsApkModalOpen(false)}
+            isLightMode={isLightMode}
           />
         </>
       }

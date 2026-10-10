@@ -3,7 +3,7 @@ import '../theme.dart';
 
 enum BadgeTrend { bullish, bearish, neutral }
 
-/// Reusable Metric & Status Badge
+/// Reusable Informational Metric & Status Tag (Non-Clickable Read-Only Plate)
 class MetricBadge extends StatelessWidget {
   final String label;
   final String? value;
@@ -25,35 +25,35 @@ class MetricBadge extends StatelessWidget {
     final baseColor = color ?? AstroQuantTheme.cyanAccent;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: baseColor.withOpacity(0.12),
+        color: const Color(0xFF020617), // Deep high contrast background
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: baseColor.withOpacity(0.35), width: 1),
+        border: Border.all(color: baseColor.withOpacity(0.7), width: 1.5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 12, color: baseColor),
-            const SizedBox(width: 4),
+            Icon(icon, size: 14, color: baseColor),
+            const SizedBox(width: 5),
           ],
           Text(
             label,
             style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
               color: baseColor,
               fontFamily: isMonospace ? 'monospace' : null,
             ),
           ),
           if (value != null) ...[
-            const SizedBox(width: 4),
+            const SizedBox(width: 6),
             Text(
               value!,
               style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
                 color: Colors.white,
                 fontFamily: isMonospace ? 'monospace' : null,
               ),
@@ -65,7 +65,7 @@ class MetricBadge extends StatelessWidget {
   }
 }
 
-/// Dynamic Bullish / Bearish Change Pill
+/// Dynamic Bullish / Bearish Change Pill (High Contrast for All Ages)
 class TrendBadge extends StatelessWidget {
   final double change;
   final double changePercent;
@@ -85,25 +85,25 @@ class TrendBadge extends StatelessWidget {
     final sign = isBullish ? '+' : '';
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: color.withOpacity(0.4)),
+        color: const Color(0xFF020617),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color, width: 1.5),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
             isBullish ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-            size: 16,
+            size: 20,
             color: color,
           ),
           Text(
             '$sign${change.toStringAsFixed(2)} ($sign${changePercent.toStringAsFixed(2)}%)',
             style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
+              fontSize: 12,
+              fontWeight: FontWeight.w900,
               color: color,
               fontFamily: 'monospace',
             ),

@@ -46,50 +46,51 @@ export const PredictedTargetHeroBanner: React.FC<PredictedTargetHeroBannerProps>
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-100">
+                <span className="text-sm font-black uppercase tracking-wider text-white">
                   {t.predictedTarget} ({stock.symbol})
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-700/60 text-emerald-300 font-bold">
-                  ★ Astro-Quant Live
+                {/* Non-Clickable Read-Only Informational Tags */}
+                <span className="text-xs font-mono px-2.5 py-0.5 rounded-md bg-slate-950 border border-slate-700 text-slate-300 font-bold select-text cursor-default">
+                  STATUS: Calibrated
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-700/60 text-cyan-300 font-bold">
-                  08-10-2026
+                <span className="text-xs font-mono px-2.5 py-0.5 rounded-md bg-slate-950 border border-cyan-600 text-cyan-300 font-bold select-text cursor-default">
+                  DATE: 08-10-2026
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400">
-                Institutional price target calculated using Gann planetary cycles & technical momentum
+              <p className="text-xs text-slate-200 font-medium mt-0.5">
+                Target calculated using Gann planetary cycles & quantitative momentum
               </p>
             </div>
           </div>
 
-          {/* Timeframe pill selector */}
-          <div className="flex items-center bg-slate-950 border border-indigo-900/60 rounded-xl p-1 text-xs font-semibold">
+          {/* Timeframe pill selector (Clearly Clickable Buttons!) */}
+          <div className="flex items-center bg-slate-950 border-2 border-slate-700 rounded-xl p-1 text-xs font-bold gap-1">
             <button
               onClick={() => setTargetHorizon('1D')}
-              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 targetHorizon === '1D'
-                  ? 'bg-cyan-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-cyan-500 text-slate-950 shadow-md font-black ring-2 ring-cyan-400/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
               }`}
             >
-              1-Day
+              1-Day Intraday
             </button>
             <button
               onClick={() => setTargetHorizon('1W')}
-              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 targetHorizon === '1W'
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-indigo-600 text-white shadow-md font-black ring-2 ring-indigo-400/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
               }`}
             >
               1-Week (Swing)
             </button>
             <button
               onClick={() => setTargetHorizon('1M')}
-              className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                 targetHorizon === '1M'
-                  ? 'bg-purple-600 text-white shadow'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-purple-600 text-white shadow-md font-black ring-2 ring-purple-400/40'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
               }`}
             >
               1-Month
@@ -100,28 +101,28 @@ export const PredictedTargetHeroBanner: React.FC<PredictedTargetHeroBannerProps>
         {/* Central Prominent Price Flow: Current Price ➔ PREDICTED TARGET */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
           {/* Current Price */}
-          <div className="md:col-span-4 bg-slate-950/70 border border-slate-800 rounded-xl p-4">
-            <div className="text-[11px] text-slate-400 uppercase font-semibold">
+          <div className="md:col-span-4 bg-slate-950 border-2 border-slate-700 rounded-2xl p-4">
+            <div className="text-xs text-slate-300 uppercase font-bold tracking-wider">
               {t.currentPrice}
             </div>
-            <div className="text-2xl sm:text-3xl font-mono font-black text-slate-200 mt-1">
+            <div className="text-3xl font-mono font-black text-white mt-1">
               {stock.currency}{currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </div>
-            <div className="text-[11px] text-slate-500 font-mono mt-0.5">
-              Live NSE/BSE Market Price
+            <div className="text-xs text-slate-300 font-mono mt-1 font-medium">
+              Live Market Price (08-10-2026)
             </div>
           </div>
 
           {/* Arrow & Move Indicator */}
           <div className="md:col-span-1 hidden md:flex items-center justify-center text-cyan-400">
-            <ArrowRight className="w-8 h-8 stroke-[2.5]" />
+            <ArrowRight className="w-8 h-8 stroke-[3]" />
           </div>
 
           {/* PREDICTED TARGET AMOUNT (Huge & Eye-Catching) */}
-          <div className="md:col-span-7 bg-gradient-to-r from-emerald-950/40 to-indigo-950/60 border-2 border-emerald-500/60 rounded-xl p-4 sm:p-5 relative shadow-lg">
+          <div className="md:col-span-7 bg-gradient-to-r from-emerald-950/80 via-slate-950 to-indigo-950/80 border-2 border-emerald-500 rounded-2xl p-4 sm:p-5 relative shadow-xl">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-400">
+                <span className="text-xs uppercase font-extrabold tracking-wider text-emerald-300">
                   {targetHorizon === '1D' ? t.intradayTarget : targetHorizon === '1W' ? t.swingTarget : t.oneMonthTarget}
                 </span>
                 <div className="text-3xl sm:text-4xl lg:text-5xl font-mono font-black text-emerald-300 tracking-tight mt-0.5 drop-shadow-[0_2px_12px_rgba(16,185,129,0.35)]">
@@ -130,29 +131,29 @@ export const PredictedTargetHeroBanner: React.FC<PredictedTargetHeroBannerProps>
               </div>
 
               {/* Profit Potential Badge */}
-              <div className="text-right shrink-0 bg-emerald-950/80 border border-emerald-600/60 px-3.5 py-2 rounded-xl">
-                <div className="text-[10px] uppercase font-bold text-emerald-400">
+              <div className="text-right shrink-0 bg-emerald-950 border-2 border-emerald-500 px-3.5 py-2 rounded-xl">
+                <div className="text-xs uppercase font-bold text-emerald-300">
                   {t.expectedProfit}
                 </div>
-                <div className="text-lg sm:text-xl font-mono font-black text-emerald-300">
+                <div className="text-lg sm:text-xl font-mono font-black text-emerald-200">
                   {profitAmount >= 0 ? '+' : ''}{stock.currency}{profitAmount.toFixed(2)} ({profitPct >= 0 ? '+' : ''}{profitPct}%)
                 </div>
               </div>
             </div>
 
             {/* Sub-Metrics Footer in Target Card */}
-            <div className="grid grid-cols-3 gap-2 pt-3 mt-3 border-t border-emerald-800/40 text-xs font-mono">
+            <div className="grid grid-cols-3 gap-2 pt-3 mt-3 border-t border-emerald-800/60 text-xs font-mono">
               <div>
-                <span className="text-slate-400 text-[10px] block">{t.stopLoss}</span>
-                <span className="text-rose-400 font-bold">{stock.currency}{stopLoss.toFixed(2)} (-{riskPct}%)</span>
+                <span className="text-slate-300 text-xs block font-semibold">{t.stopLoss}</span>
+                <span className="text-rose-300 font-extrabold text-sm">{stock.currency}{stopLoss.toFixed(2)} (-{riskPct}%)</span>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] block">{t.riskReward}</span>
-                <span className="text-cyan-300 font-bold">1 : {rrRatio}</span>
+                <span className="text-slate-300 text-xs block font-semibold">{t.riskReward}</span>
+                <span className="text-cyan-200 font-extrabold text-sm">1 : {rrRatio}</span>
               </div>
               <div>
-                <span className="text-slate-400 text-[10px] block">{t.modelConfidence}</span>
-                <span className="text-amber-300 font-bold">{stock.prediction.confidenceScore}%</span>
+                <span className="text-slate-300 text-xs block font-semibold">{t.modelConfidence}</span>
+                <span className="text-amber-300 font-extrabold text-sm">{stock.prediction.confidenceScore}%</span>
               </div>
             </div>
           </div>
